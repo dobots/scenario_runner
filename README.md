@@ -191,3 +191,81 @@ install(TARGETS batterycheck_logger DESTINATION lib/${PROJECT_NAME})
 5. Run this file: `ros2 run bt_demo batterycheck_logger`
 ![batterycheck_logger](https://github.com/dobots/scenario_runner/blob/main/img/batterycheck_logger.png)
 
+# First tutorial of the official guide
+[Source: https://www.behaviortree.dev/tutorial_01_first_tree/](https://www.behaviortree.dev/tutorial_01_first_tree/)
+
+1. Copy the file called batterycheck_logger.cpp and rename it to t01_create_tree.cpp. Add the new functions under the battery check functions:
+```
+/ Example of custom SyncActionNode (synchronous action)
+// without ports.
+class ApproachObject : public BT::SyncActionNode
+{
+  public:
+    ApproachObject(const std::string& name) :
+        BT::SyncActionNode(name, {})
+    {
+    }
+
+    // You must override the virtual function tick()
+    BT::NodeStatus tick() override
+    {
+        std::cout << "ApproachObject: " << this->name() << std::endl;
+        return BT::NodeStatus::SUCCESS;
+    }
+};
+
+// We want to wrap into an ActionNode the methods open() and close()
+class GripperInterface
+{
+public:
+    GripperInterface(): _open(true) {}
+
+    NodeStatus open() {
+        _open = true;
+        std::cout << "GripperInterface::open" << std::endl;
+        return NodeStatus::SUCCESS;
+    }
+
+    NodeStatus close() {
+        std::cout << "GripperInterface::close" << std::endl;
+        _open = false;
+        return NodeStatus::SUCCESS;
+    }
+
+private:
+    bool _open; // shared information
+};
+```
+In the main function after the BehaviorTreeFactory initialization call these functions:
+```
+// The recommended way to create a Node is through inheritance.
+    factory.registerNodeType<ApproachObject>("ApproachObject");
+
+    // Registering a SimpleActionNode using a function pointer.
+    // you may also use C++11 lambdas instead of std::bind
+    factory.registerSimpleCondition("CheckBattery", std::bind(CheckBattery));
+
+    //You can also create SimpleActionNodes using methods of a class
+    GripperInterface gripper;
+    factory.registerSimpleAction("OpenGripper", 
+                                 std::bind(&GripperInterface::open, &gripper));
+    factory.registerSimpleAction("CloseGripper", 
+                                 std::bind(&GripperInterface::close, &gripper));
+```
+
+4. Modify the CMakelists.txt and add the t01_create_tree.cpp to it:
+```
+add_executable(t01_create_tree src/t01_create_tree.cpp)
+ament_target_dependencies(t01_create_tree rclcpp std_msgs behaviortree_cpp_v3)
+
+install(TARGETS t01_create_tree DESTINATION lib/${PROJECT_NAME})
+```
+5. Build the package: `colcon build`
+6. Run this file: `ros2 run bt_demo t01_create_tree`
+![t01_tree](https://github.com/dobots/scenario_runner/blob/main/img/t01.png)
+
+## Next steps
+- move the functions into a separate c++ file and include only its header
+- follow the official tutorials
+- create our own behaviour tree description
+- implement with simplified functions which prints the results to the terminal
