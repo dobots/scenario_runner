@@ -20,8 +20,13 @@ find_package(behaviortree_cpp_v3 REQUIRED)
 add_executable(batterycheck src/batterycheck.cpp)
 ament_target_dependencies(batterycheck rclcpp std_msgs behaviortree_cpp_v3)
 
+add_executable(batterycheck_logger src/batterycheck_logger.cpp)
+ament_target_dependencies(batterycheck_logger rclcpp std_msgs behaviortree_cpp_v3)
+
+
 #Finally, add the install(TARGETS..) section so ros2 run can find your executable
 install(TARGETS batterycheck DESTINATION lib/${PROJECT_NAME})
   
+install(TARGETS batterycheck_logger DESTINATION lib/${PROJECT_NAME})
 
 ament_package()

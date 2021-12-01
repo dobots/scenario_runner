@@ -31,7 +31,7 @@ int main(int argc, char * argv[])
 
     // IMPORTANT: when the object "tree" goes out of scope, all the 
     // TreeNodes are destroyed
-    auto tree = factory.createTreeFromFile("/home/reka/foxy2_ws/src/bt_demo/my_tree.xml");
+    auto tree = factory.createTreeFromFile("/home/reka/foxy2_ws/src/bt_demo/xml/batterycheck_tree.xml");
     
     printTreeRecursively(tree.rootNode());
 
