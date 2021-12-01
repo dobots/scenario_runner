@@ -162,7 +162,7 @@ ament_package()
 
 ![battery_check.png](https://github.com/dobots/scenario_runner/blob/main/img/batterycheck.png)
 
-## Add logging functionality
+## 4. Add logging functionality
 
 1. Copy the file called batterycheck.cpp and rename it to batterycheck_logger.cpp. Include the logger header at the top of the file:
 ```
@@ -191,7 +191,7 @@ install(TARGETS batterycheck_logger DESTINATION lib/${PROJECT_NAME})
 5. Run this file: `ros2 run bt_demo batterycheck_logger`
 ![batterycheck_logger](https://github.com/dobots/scenario_runner/blob/main/img/batterycheck_logger.png)
 
-# First tutorial of the official guide
+## 5. First tutorial of the official guide
 [Source: https://www.behaviortree.dev/tutorial_01_first_tree/](https://www.behaviortree.dev/tutorial_01_first_tree/)
 
 1. Copy the file called batterycheck_logger.cpp and rename it to t01_create_tree.cpp. Add the new functions under the battery check functions:
@@ -265,8 +265,129 @@ install(TARGETS t01_create_tree DESTINATION lib/${PROJECT_NAME})
 
 ![t01_tree](https://github.com/dobots/scenario_runner/blob/main/img/t01.png)
 
-## Next steps
-- move the functions into a separate c++ file and include only its header
-- follow the official tutorials
+## 6. Move the functions to a separate file
+1. Create a new file called simple_functions.hpp in the bt_demo/src repository and include the functions here from the t01_create_tree.cpp:
+```
+#include "behaviortree_cpp_v3/bt_factory.h"
+
+using namespace BT;
+
+// Simple function that return a NodeStatus
+BT::NodeStatus CheckBattery()
+{
+    std::cout << "[ Battery: OK ]" << std::endl;
+    return BT::NodeStatus::SUCCESS;
+}
+
+// Example of custom SyncActionNode (synchronous action)
+// without ports.
+class ApproachObject : public BT::SyncActionNode
+{
+  public:
+    ApproachObject(const std::string& name) :
+        BT::SyncActionNode(name, {})
+    {
+    }
+
+    // You must override the virtual function tick()
+    BT::NodeStatus tick() override
+    {
+        std::cout << "ApproachObject: " << this->name() << std::endl;
+        return BT::NodeStatus::SUCCESS;
+    }
+};
+
+// We want to wrap into an ActionNode the methods open() and close()
+class GripperInterface
+{
+public:
+    GripperInterface(): _open(true) {}
+
+    NodeStatus open() {
+        _open = true;
+        std::cout << "GripperInterface::open" << std::endl;
+        return NodeStatus::SUCCESS;
+    }
+
+    NodeStatus close() {
+        std::cout << "GripperInterface::close" << std::endl;
+        _open = false;
+        return NodeStatus::SUCCESS;
+    }
+
+private:
+    bool _open; // shared information
+};
+```
+
+2. Copy the file called t01_create_tree.cpp and rename it to t01_create_tree_distr.cpp. 
+Modify this new file by including the previous hpp file  and removing  the function descriptions. The final file should look like this:
+```
+//Include the behaviortree
+#include "behaviortree_cpp_v3/bt_factory.h"
+#include "behaviortree_cpp_v3/loggers/bt_cout_logger.h"
+
+
+#include "rclcpp/rclcpp.hpp"
+
+#include "dummy_nodes.hpp"
+
+using namespace BT;
+
+int main(int argc, char * argv[])
+{
+
+    rclcpp::init(argc, argv);
+ 
+  // We use the BehaviorTreeFactory to register our custom nodes
+    BehaviorTreeFactory factory;
+
+   // The recommended way to create a Node is through inheritance.
+    factory.registerNodeType<ApproachObject>("ApproachObject");
+
+    // Registering a SimpleActionNode using a function pointer.
+    // you may also use C++11 lambdas instead of std::bind
+    factory.registerSimpleCondition("CheckBattery", std::bind(CheckBattery));
+
+    //You can also create SimpleActionNodes using methods of a class
+    GripperInterface gripper;
+    factory.registerSimpleAction("OpenGripper", 
+                                 std::bind(&GripperInterface::open, &gripper));
+    factory.registerSimpleAction("CloseGripper", 
+                                 std::bind(&GripperInterface::close, &gripper));
+
+        
+    // Trees are created at deployment-time (i.e. at run-time, but only 
+    // once at the beginning). 
+
+    // IMPORTANT: when the object "tree" goes out of scope, all the 
+    // TreeNodes are destroyed
+    auto tree = factory.createTreeFromFile("/home/reka/foxy2_ws/src/bt_demo/xml/t01.xml");
+    
+    // This logger prints state changes on console
+    StdCoutLogger logger_cout(tree);
+
+    printTreeRecursively(tree.rootNode());
+
+    // To "execute" a Tree you need to "tick" it.
+    // The tick is propagated to the children based on the logic of the tree.
+    // In this case, the entire sequence is executed, because all the children
+    // of the Sequence return SUCCESS.
+    tree.tickRoot();
+  
+  rclcpp::shutdown();
+  return 0;
+}
+```
+Thanks to the .hpp format, we don't need to create a .h and a .cpp file. Above all we don't need to compile them in a way to create libraries. The original tutorial is using traditional .h files, but it makes it more complicated to set up. I would recommend this solution.
+
+3. Include the new t01_create_tree_distr.cpp in the CMakelists.txt:
+
+5. Build the package: `colcon build`
+6. Run this file: `ros2 run bt_demo t01_create_tree_distr`
+![t01_tree](https://github.com/dobots/scenario_runner/blob/main/img/t01.png)
+
+## 7. Next steps
+- continue with the official tutorials
 - create our own behaviour tree description
 - implement with simplified functions which prints the results to the terminal
