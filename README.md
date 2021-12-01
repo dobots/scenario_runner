@@ -164,5 +164,32 @@ ament_package()
 
 ![battery_check.png](https://github.com/dobots/scenario_runner/blob/main/img/batterycheck.png)
 
+## Add logging functionality
 
+1. Copy the file called batterycheck.cpp and rename it to batterycheck_logger.cpp. Include the logger header at the top of the file:
+```
+#include "behaviortree_cpp_v3/loggers/bt_cout_logger.h"
+```
+2. In the main function include the StdCoutLogger and print the tree recursively:
+```
+int main(int argc, char * argv[])
+{
+...
+    // This logger prints state changes on console
+    StdCoutLogger logger_cout(tree);
+
+    printTreeRecursively(tree.rootNode());
+...
+}
+```
+3. Modify the CMakelists.txt and add the batterycheck_logger.cpp to it:
+```
+add_executable(batterycheck_logger src/batterycheck_logger.cpp)
+ament_target_dependencies(batterycheck_logger rclcpp std_msgs behaviortree_cpp_v3)
+
+install(TARGETS batterycheck_logger DESTINATION lib/${PROJECT_NAME})
+```
+4. Build the package: `colcon build`
+5. Run this file: `ros2 run bt_demo batterycheck_logger`
+![batterycheck_logger](https://github.com/dobots/scenario_runner/blob/main/img/batterycheck_logger.png)
 
