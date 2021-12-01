@@ -261,7 +261,8 @@ ament_target_dependencies(t01_create_tree rclcpp std_msgs behaviortree_cpp_v3)
 install(TARGETS t01_create_tree DESTINATION lib/${PROJECT_NAME})
 ```
 5. Build the package: `colcon build`
-6. Run this file: `ros2 run bt_demo t01_create_tree`
+6. Run this file: `ros2 run bt_demo t01_create_tree`.
+
 ![t01_tree](https://github.com/dobots/scenario_runner/blob/main/img/t01.png)
 
 ## Next steps
