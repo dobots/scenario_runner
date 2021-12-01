@@ -37,7 +37,7 @@ colcon build
 . install/setup.bash
 ```
 
-## Create a the source files
+## Create the source files
 
 1. Create an xml file called batterycheck_tree.xml which describes the behaviour tree:
 ```
