@@ -37,9 +37,21 @@ colcon build
 . install/setup.bash
 ```
 
-## Create a source file
+## Create a the source files
 
-3. Create a new file called `batterycheck.cpp`:
+1. Create an xml file called batterycheck_tree.xml which describes the behaviour tree:
+```
+<root main_tree_to_execute = "MainTree" >
+     <BehaviorTree ID="MainTree">
+        <Sequence name="root_sequence">
+            <CheckBattery   name="check_battery"/>
+        </Sequence>
+     </BehaviorTree>
+ </root>
+```
+
+
+2. Create a new file called `batterycheck.cpp`:
 ```
 //Include the behaviortree
 #include "behaviortree_cpp_v3/bt_factory.h"
@@ -74,7 +86,7 @@ int main(int argc, char * argv[])
 
     // IMPORTANT: when the object "tree" goes out of scope, all the 
     // TreeNodes are destroyed
-    auto tree = factory.createTreeFromFile("/home/reka/foxy2_ws/src/bt_demo/my_tree.xml");
+    auto tree = factory.createTreeFromFile("/home/reka/foxy2_ws/src/bt_demo/xml/batterycheck_tree.xml");
     
     printTreeRecursively(tree.rootNode());
 
