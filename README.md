@@ -100,6 +100,8 @@ int main(int argc, char * argv[])
   return 0;
 }
 ```
+Modify the path of the xml file to your workspace.
+
 
 4. Modify the CMakelists.txt to include this source file and the behaviortree library. The CMakelists.txt file should look like the following:
 ```
