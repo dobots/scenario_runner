@@ -1,6 +1,6 @@
 # How to use the Behaviortree.cpp in ROS2
 
-## Install behaviortree.cpp:
+## 1. Install behaviortree.cpp:
  1. On Ubuntu, you are encouraged to install the following dependencies:
  ```   
 sudo apt-get install libzmq3-dev libboost-dev
@@ -13,7 +13,7 @@ sudo apt-get install ros-$ROS_DISTRO-behaviortree-cpp-v3
 For this tutorial we are using the `foxy` ROS-DISTRO.
 [Source](https://github.com/BehaviorTree/BehaviorTree.CPP)
 
-## Create a new workspace and ROS package
+## 2. Create a new workspace and ROS package
 
 1. Create a ROS2 workspace by following the official [ROS2 tutorials](https://docs.ros.org/en/foxy/Tutorials/Workspace/Creating-A-Workspace.html)
 ```
@@ -37,7 +37,7 @@ colcon build
 . install/setup.bash
 ```
 
-## Create the source files
+## 3. Create the source files to check battery level
 
 1. Create an xml file called batterycheck_tree.xml which describes the behaviour tree:
 ```
