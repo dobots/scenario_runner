@@ -406,7 +406,7 @@ Thanks to the .hpp format, we don't need to create a .h and a .cpp file. Above a
 </root>
 ```
 
-3. Move into the src directory of this package and copy the file called t01_create_tree_distr.cpp. 
+3. Move into the src directory of this package and copy the file called t01_create_tree_distr.cpp, then rename it t02_basic_ports.cpp
 From the main function replaces the nodes from the previous tutorial with the nodes from the tutorial:
 ```
 ...
