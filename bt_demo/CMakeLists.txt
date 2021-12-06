@@ -31,6 +31,9 @@ ament_target_dependencies(t01_create_tree rclcpp std_msgs behaviortree_cpp_v3)
 add_executable(t01_create_tree_distr src/t01_create_tree_distr.cpp)
 ament_target_dependencies(t01_create_tree_distr rclcpp std_msgs behaviortree_cpp_v3)
 
+add_executable(t02_basic_ports src/t02_basic_ports.cpp)
+ament_target_dependencies(t02_basic_ports rclcpp std_msgs behaviortree_cpp_v3)
+
 #Finally, add the install(TARGETS..) section so ros2 run can find your executable
 install(TARGETS batterycheck DESTINATION lib/${PROJECT_NAME})
   
@@ -39,5 +42,7 @@ install(TARGETS batterycheck_logger DESTINATION lib/${PROJECT_NAME})
 install(TARGETS t01_create_tree DESTINATION lib/${PROJECT_NAME})
 
 install(TARGETS t01_create_tree_distr DESTINATION lib/${PROJECT_NAME})
+
+install(TARGETS t02_basic_ports DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
