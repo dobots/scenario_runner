@@ -618,7 +618,7 @@ colcon build
 11. Now open the t04_create_tree_react.cpp file and modify the xml path to t01.xml. Rebuild, source, and then compare the output:
 ![t04_seq](https://github.com/dobots/scenario_runner/blob/main/img/t04_seq.png)
 
-# Tutorial 4: subtrees
+# Tutorial 5: subtrees
 
 This tutorial explains how to create a comlex tree from simple trees:
 
