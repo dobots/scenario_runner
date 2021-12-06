@@ -511,6 +511,112 @@ Quoted from: [https://github.com/BehaviorTree/BehaviorTree.CPP/blob/master/examp
 
 >**Notice that there is a built-in action SetBlackboard which enables to modify its values and keys directly.**
 
+# Tutorial 4: sequences
+
+This tutorial explains the difference between a sequence node and a reactive sequence node.
+
+I would reccomend reading through the official tutorial:
+https://www.behaviortree.dev/tutorial_04_sequence/
+
+We will not replicate this tutorial, because it has multiple bugs, dependencies and fixing them would be time consuming.
+
+Instead we will modify the first tutorial to show the effect of using reactive nodes.
+
+1. Copy the file t01.xml file and rename it to t04.xml. Open this file and modify this xml based on the tutorial to include a reactive sequence node:
+```
+  <root main_tree_to_execute = "MainTree" >
+     <BehaviorTree ID="MainTree">
+        <ReactiveSequence>
+           <CheckBattery/>
+           <Sequence>
+              <OpenGripper    name="open_gripper"/>
+              <ApproachObject name="approach_object"/>
+              <CloseGripper   name="close_gripper"/>
+        </Sequence>
+      </ReactiveSequence>  
+     </BehaviorTree>
+ </root>
+```
+
+2. Move into the src directory of this package and copy the file called t01_basic_ports.cpp. Rename it t04_create_tree_react.cpp.
+Include a sleep function:
+```
+inline void SleepMS(int ms)
+{
+    std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+}
+```
+Modify the ApproachObject function to change it **AsynActionNode** from **SyncActionNode** make it run longer by adding sleep:
+```
+class ApproachObject : public BT::AsyncActionNode
+{
+  public:
+    ApproachObject(const std::string& name) :
+        BT::AsyncActionNode(name, {})
+    {
+    }
+
+    BT::NodeStatus tick() override
+    {
+        std::cout << "ApproachObject: " << this->name() << std::endl;
+        
+        int count = 0;
+        // Pretend that "computing" takes 250 milliseconds.
+        while (count++ < 25)
+        {
+          SleepMS(10);
+        }
+                
+        return BT::NodeStatus::SUCCESS;
+    }
+};  
+```
+
+Modify the .xml path to t04.xml. 
+Comment the logger function.
+Comment the `tree.tickRoot()`function and include the following print, which has multiple sleep functions:
+```
+NodeStatus status;
+
+    std::cout << "\n--- 1st executeTick() ---" << std::endl;
+    status = tree.tickRoot();
+
+    SleepMS(150);
+    std::cout << "\n--- 2nd executeTick() ---" << std::endl;
+    status = tree.tickRoot();
+
+    SleepMS(150);
+    std::cout << "\n--- 3rd executeTick() ---" << std::endl;
+    status = tree.tickRoot();
+
+    std::cout << std::endl;
+```
+
+The final cpp file should look like this: https://github.com/dobots/scenario_runner/blob/main/bt_demo/src/t04_create_tree_react.cpp
+
+4. Include the new t04_create_tree_react.cpp in the CMakelists.txt:
+```
+add_executable(t04_create_tree_react src/t04_create_tree_react.cpp)
+ament_target_dependencies(t04_create_tree_react rclcpp std_msgs behaviortree_cpp_v3)
+
+install(TARGETS t04_create_tree_react DESTINATION lib/${PROJECT_NAME})
+```
+
+8. Navigate to the ROS2 workspace. Source the ros distribution, source this workspace and then build the package:
+```
+cd ~/<your_workspace>
+source /opt/ros/foxy/setup.bash
+. install/local_setup.bash
+colcon build
+```
+
+9. Source it:`. install/local_setup.bash`
+
+10. Run this file: `ros2 run bt_demo t04_create_tree_react`. The output should look like this:
+![t04_react](https://github.com/dobots/scenario_runner/blob/main/img/t04_react.png)
+
+11. Now open the t04_create_tree_react.cpp file and modify the xml path to t01.xml. Rebuild, source, and then compare the output:
+![t04_seq](https://github.com/dobots/scenario_runner/blob/main/img/t04_seq.png)
 
 ## 7. Next steps
 - continue with the official tutorials
