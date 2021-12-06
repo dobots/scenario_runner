@@ -618,6 +618,44 @@ colcon build
 11. Now open the t04_create_tree_react.cpp file and modify the xml path to t01.xml. Rebuild, source, and then compare the output:
 ![t04_seq](https://github.com/dobots/scenario_runner/blob/main/img/t04_seq.png)
 
+# Tutorial 4: subtrees
+
+This tutorial explains how to create a comlex tree from simple trees:
+
+I would reccomend reading through the official tutorial:
+https://www.behaviortree.dev/tutorial_05_subtrees/
+
+```
+<root main_tree_to_execute = "MainTree">
+
+    <BehaviorTree ID="DoorClosed">
+        <Sequence name="door_closed_sequence">
+            <Inverter>
+                <IsDoorOpen/>
+            </Inverter>
+            <RetryUntilSuccesful num_attempts="4">
+                <OpenDoor/>
+            </RetryUntilSuccesful>
+            <PassThroughDoor/>
+        </Sequence>
+    </BehaviorTree>
+
+    <BehaviorTree ID="MainTree">
+        <Fallback name="root_Fallback">
+            <Sequence name="door_open_sequence">
+                <IsDoorOpen/>
+                <PassThroughDoor/>
+            </Sequence>
+            <SubTree ID="DoorClosed"/>
+            <PassThroughWindow/>
+        </Fallback>
+    </BehaviorTree>
+
+</root>
+```
+
+On the c++ side we don't need to modify anything to use a tree composed of multiple trees. Therefore, this tutorial doesn't have any implementation. In addition, it introduces the loggers, what we already discussed at the beggining of the tutorials. 
+
 ## 7. Next steps
 - continue with the official tutorials
 - create our own behaviour tree description
