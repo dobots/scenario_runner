@@ -536,6 +536,8 @@ colcon build
 
 ![t02_tree](https://github.com/dobots/scenario_runner/blob/main/img/t02.png)
 
+![t02_flow](https://github.com/dobots/scenario_runner/blob/main/img/t02_flow.png)
+
 ## 7. Next steps
 - continue with the official tutorials
 - create our own behaviour tree description
