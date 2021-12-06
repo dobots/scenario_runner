@@ -387,6 +387,155 @@ Thanks to the .hpp format, we don't need to create a .h and a .cpp file. Above a
 6. Run this file: `ros2 run bt_demo t01_create_tree_distr`
 ![t01_tree](https://github.com/dobots/scenario_runner/blob/main/img/t01.png)
 
+
+## Tutorial 2: basic ports
+1. Read through the official tutorial: [https://www.behaviortree.dev/tutorial_02_basic_ports/](https://www.behaviortree.dev/tutorial_02_basic_ports/)
+
+2. Move inside the xml folder and create a new file called t02.xml. Open this file and copy the xml from the tutorial:
+```
+<root main_tree_to_execute = "MainTree" >
+    <BehaviorTree ID="MainTree">
+       <Sequence name="root_sequence">
+           <SaySomething     message="start thinking..." />
+           <ThinkWhatToSay   text="{the_answer}"/>
+           <SaySomething     message="{the_answer}" />
+           <SaySomething2    message="SaySomething2 works too..." />
+           <SaySomething2    message="{the_answer}" />
+       </Sequence>
+    </BehaviorTree>
+</root>
+```
+
+3. Move into the src directory of this package and copy the file called t01_create_tree_distr.cpp. 
+From the main function replaces the nodes from the previous tutorial with the nodes from the tutorial:
+```
+...
+  // We use the BehaviorTreeFactory to register our custom nodes
+    BehaviorTreeFactory factory;
+
+    factory.registerNodeType<SaySomething>("SaySomething");
+    factory.registerNodeType<ThinkWhatToSay>("ThinkWhatToSay");
+
+    // SimpleActionNodes can not define their own method providedPorts().
+    // We should pass a PortsList explicitly if we want the Action to 
+    // be able to use getInput() or setOutput();
+    PortsList say_something_ports = { InputPort<std::string>("message") };
+    factory.registerSimpleAction("SaySomething2", SaySomethingSimple,             say_something_ports );
+
+
+    auto tree = factory.createTreeFromFile("<path-to-your-xml>t02.xml");
+    ...
+
+```
+Don't forget to update the path to the t02.xml using your own path.
+
+4. Inside the src folder create a new file containing all the necessary functions and call it functions_t02.hpp:
+```
+#include "behaviortree_cpp_v3/bt_factory.h"
+
+using namespace BT;
+
+// SyncActionNode (synchronous action) with an input port.
+class SaySomething : public SyncActionNode
+{
+  public:
+    // If your Node has ports, you must use this constructor signature 
+    SaySomething(const std::string& name, const NodeConfiguration& config)
+      : SyncActionNode(name, config)
+    { }
+
+    // It is mandatory to define this static method.
+    static PortsList providedPorts()
+    {
+        // This action has a single input port called "message"
+        // Any port must have a name. The type is optional.
+        return { InputPort<std::string>("message") };
+    }
+
+    // As usual, you must override the virtual function tick()
+    NodeStatus tick() override
+    {
+        Optional<std::string> msg = getInput<std::string>("message");
+        // Check if optional is valid. If not, throw its error
+        if (!msg)
+        {
+            throw BT::RuntimeError("missing required input [message]: ", 
+                                   msg.error() );
+        }
+
+        // use the method value() to extract the valid message.
+        std::cout << "Robot says: " << msg.value() << std::endl;
+        return NodeStatus::SUCCESS;
+    }
+};
+
+// Simple function that return a NodeStatus
+BT::NodeStatus SaySomethingSimple(BT::TreeNode& self)
+{
+  Optional<std::string> msg = self.getInput<std::string>("message");
+  // Check if optional is valid. If not, throw its error
+  if (!msg)
+  {
+    throw BT::RuntimeError("missing required input [message]: ", msg.error());
+  }
+
+  // use the method value() to extract the valid message.
+  std::cout << "Robot says: " << msg.value() << std::endl;
+  return NodeStatus::SUCCESS;
+}
+
+class ThinkWhatToSay : public SyncActionNode
+{
+  public:
+    ThinkWhatToSay(const std::string& name, const NodeConfiguration& config)
+      : SyncActionNode(name, config)
+    {
+    }
+
+    static PortsList providedPorts()
+    {
+        return { OutputPort<std::string>("text") };
+    }
+
+    // This Action writes a value into the port "text"
+    NodeStatus tick() override
+    {
+        // the output may change at each tick(). Here we keep it simple.
+        setOutput("text", "The answer is 42" );
+        return NodeStatus::SUCCESS;
+    }
+};
+
+```
+6. Open your cpp file again and modify the name of the .hpp file to this new file:
+```
+#include "functions_t02.hpp"
+```
+
+8. Include the new t02_basic_ports.cpp in the CMakelists.txt:
+```
+...
+add_executable(t02_basic_ports src/t02_basic_ports.cpp)
+ament_target_dependencies(t02_basic_ports rclcpp std_msgs behaviortree_cpp_v3)
+
+install(TARGETS t02_basic_ports DESTINATION lib/${PROJECT_NAME})
+...
+```
+
+8. Navigate to the ROS2 workspace. Source the ros distribution, source this workspace and then build the package:
+```
+cd ~/<your_workspace>
+source /opt/ros/foxy/setup.bash
+. install/local_setup.bash
+colcon build
+```
+
+9. Source it:`. install/local_setup.bash`
+
+10. Run this file: `ros2 run bt_demo t02_basic_ports`
+
+![t02_tree](https://github.com/dobots/scenario_runner/blob/main/img/t02.png)
+
 ## 7. Next steps
 - continue with the official tutorials
 - create our own behaviour tree description
