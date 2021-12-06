@@ -51,53 +51,9 @@ colcon build
 ```
 
 
-2. Create a new file called `batterycheck.cpp`:
-```
-//Include the behaviortree
-#include "behaviortree_cpp_v3/bt_factory.h"
+2. Create a new file called `batterycheck.cpp`.
+It should look like this file: https://github.com/dobots/scenario_runner/blob/main/bt_demo/src/batterycheck.cpp
 
-#include "rclcpp/rclcpp.hpp"
-
-using namespace BT;
-
-// Simple function that return a NodeStatus
-BT::NodeStatus CheckBattery()
-{
-    std::cout << "[ Battery: OK ]" << std::endl;
-    return BT::NodeStatus::SUCCESS;
-}
-
-
-int main(int argc, char * argv[])
-{
-
-    rclcpp::init(argc, argv);
- 
-  // We use the BehaviorTreeFactory to register our custom nodes
-    BehaviorTreeFactory factory;
-
- 
-    // Registering a SimpleActionNode using a function pointer.
-    // you may also use C++11 lambdas instead of std::bind
-    factory.registerSimpleCondition("CheckBattery", std::bind(CheckBattery));
-        
-    // Trees are created at deployment-time (i.e. at run-time, but only 
-    // once at the beginning). 
-
-    // IMPORTANT: when the object "tree" goes out of scope, all the 
-    // TreeNodes are destroyed
-    auto tree = factory.createTreeFromFile("/home/reka/foxy2_ws/src/bt_demo/xml/batterycheck_tree.xml");
-    
-    // To "execute" a Tree you need to "tick" it.
-    // The tick is propagated to the children based on the logic of the tree.
-    // In this case, the entire sequence is executed, because all the children
-    // of the Sequence return SUCCESS.
-    tree.tickRoot();
-  
-  rclcpp::shutdown();
-  return 0;
-}
-```
 Modify the path of the xml file to your workspace.
 
 
@@ -322,63 +278,8 @@ private:
 
 2. Copy the file called t01_create_tree.cpp and rename it to t01_create_tree_distr.cpp. 
 Modify this new file by including the previous hpp file  and removing  the function descriptions. The final file should look like this:
-```
-//Include the behaviortree
-#include "behaviortree_cpp_v3/bt_factory.h"
-#include "behaviortree_cpp_v3/loggers/bt_cout_logger.h"
+https://github.com/dobots/scenario_runner/blob/main/bt_demo/src/t01_create_tree_distr.cpp
 
-
-#include "rclcpp/rclcpp.hpp"
-
-#include "dummy_nodes.hpp"
-
-using namespace BT;
-
-int main(int argc, char * argv[])
-{
-
-    rclcpp::init(argc, argv);
- 
-  // We use the BehaviorTreeFactory to register our custom nodes
-    BehaviorTreeFactory factory;
-
-   // The recommended way to create a Node is through inheritance.
-    factory.registerNodeType<ApproachObject>("ApproachObject");
-
-    // Registering a SimpleActionNode using a function pointer.
-    // you may also use C++11 lambdas instead of std::bind
-    factory.registerSimpleCondition("CheckBattery", std::bind(CheckBattery));
-
-    //You can also create SimpleActionNodes using methods of a class
-    GripperInterface gripper;
-    factory.registerSimpleAction("OpenGripper", 
-                                 std::bind(&GripperInterface::open, &gripper));
-    factory.registerSimpleAction("CloseGripper", 
-                                 std::bind(&GripperInterface::close, &gripper));
-
-        
-    // Trees are created at deployment-time (i.e. at run-time, but only 
-    // once at the beginning). 
-
-    // IMPORTANT: when the object "tree" goes out of scope, all the 
-    // TreeNodes are destroyed
-    auto tree = factory.createTreeFromFile("/home/reka/foxy2_ws/src/bt_demo/xml/t01.xml");
-    
-    // This logger prints state changes on console
-    StdCoutLogger logger_cout(tree);
-
-    printTreeRecursively(tree.rootNode());
-
-    // To "execute" a Tree you need to "tick" it.
-    // The tick is propagated to the children based on the logic of the tree.
-    // In this case, the entire sequence is executed, because all the children
-    // of the Sequence return SUCCESS.
-    tree.tickRoot();
-  
-  rclcpp::shutdown();
-  return 0;
-}
-```
 Thanks to the .hpp format, we don't need to create a .h and a .cpp file. Above all we don't need to compile them in a way to create libraries. The original tutorial is using traditional .h files, but it makes it more complicated to set up. I would recommend this solution.
 
 3. Include the new t01_create_tree_distr.cpp in the CMakelists.txt:
@@ -572,134 +473,8 @@ From the main function replaces the nodes from the previous tutorial with the no
 Don't forget to update the path to the t03.xml using your own path.
 Then you need to include the functions in the same file or you can create a separate .hpp file if you prefer. For simplicity, we will use the same file for this tutorial.
 The final cpp file should look like this:
-```
-//Include the behaviortree
-#include "behaviortree_cpp_v3/bt_factory.h"
-#include "behaviortree_cpp_v3/loggers/bt_cout_logger.h"
+https://github.com/dobots/scenario_runner/blob/main/bt_demo/src/t03_generic_ports.cpp
 
-
-#include "rclcpp/rclcpp.hpp"
-
-
-using namespace BT;
-
-// We want to be able to use this custom type
-struct Position2D { double x,y; };
-
-// It is recommended (or, in some cases, mandatory) to define a template
-// specialization of convertFromString that converts a string to Position2D.
-namespace BT
-{
-template <> inline Position2D convertFromString(StringView str)
-{
-    printf("Converting string: \"%s\"\n", str.data() );
-
-    // real numbers separated by semicolons
-    auto parts = splitString(str, ';');
-    if (parts.size() != 2)
-    {
-        throw RuntimeError("invalid input)");
-    }
-    else{
-        Position2D output;
-        output.x     = convertFromString<double>(parts[0]);
-        output.y     = convertFromString<double>(parts[1]);
-        return output;
-    }
-}
-} // end namespace BT
-
-class CalculateGoal: public SyncActionNode
-{
-public:
-    CalculateGoal(const std::string& name, const NodeConfiguration& config):
-        SyncActionNode(name,config)
-    {}
-
-    static PortsList providedPorts()
-    {
-        return { OutputPort<Position2D>("goal") };
-    }
-
-    NodeStatus tick() override
-    {
-        Position2D mygoal = {1.1, 2.3};
-        setOutput<Position2D>("goal", mygoal);
-        return NodeStatus::SUCCESS;
-    }
-};
-
-
-class PrintTarget: public SyncActionNode
-{
-public:
-    PrintTarget(const std::string& name, const NodeConfiguration& config):
-        SyncActionNode(name,config)
-    {}
-
-    static PortsList providedPorts()
-    {
-        // Optionally, a port can have a human readable description
-        const char*  description = "Simply print the goal on console...";
-        return { InputPort<Position2D>("target", description) };
-    }
-
-    NodeStatus tick() override
-    {
-        auto res = getInput<Position2D>("target");
-        if( !res )
-        {
-            throw RuntimeError("error reading port [target]:", res.error());
-        }
-        Position2D target = res.value();
-        printf("Target positions: [ %.1f, %.1f ]\n", target.x, target.y );
-        return NodeStatus::SUCCESS;
-    }
-};
-
-/** The tree is a Sequence of 4 actions
-*  1) Store a value of Position2D in the entry "GoalPosition"
-*     using the action CalculateGoal.
-*
-*  2) Call PrintTarget. The input "target" will be read from the Blackboard
-*     entry "GoalPosition".
-*
-*  3) Use the built-in action SetBlackboard to write the key "OtherGoal".
-*     A conversion from string to Position2D will be done under the hood.
-*
-*  4) Call PrintTarget. The input "goal" will be read from the Blackboard
-*     entry "OtherGoal".
-*/
-
-
-int main(int argc, char * argv[])
-{
-
-    rclcpp::init(argc, argv);
- 
-  // We use the BehaviorTreeFactory to register our custom nodes
-    BehaviorTreeFactory factory;
-
-    factory.registerNodeType<CalculateGoal>("CalculateGoal");
-    factory.registerNodeType<PrintTarget>("PrintTarget");
-
-    auto tree = factory.createTreeFromFile("/home/reka/foxy2_ws/src/bt_demo/xml/t03.xml");
-    
-    // This logger prints state changes on console
-    StdCoutLogger logger_cout(tree);
-
-    printTreeRecursively(tree.rootNode());
-
-    // To "execute" a Tree you need to "tick" it.
-    // The tick is propagated to the children based on the logic of the tree.
-    // In this case, the entire sequence is executed, because all the children
-    // of the Sequence return SUCCESS.
-    tree.tickRoot();
-  
-  rclcpp::shutdown();
-  return 0;
-}
-```
 
 4. Include the new t03_generic_ports.cpp in the CMakelists.txt:
 ```
