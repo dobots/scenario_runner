@@ -656,6 +656,11 @@ https://www.behaviortree.dev/tutorial_05_subtrees/
 
 On the c++ side we don't need to modify anything to use a tree composed of multiple trees. Therefore, this tutorial doesn't have any implementation. In addition, it introduces the loggers, what we already discussed at the beggining of the tutorials. 
 
+# Tutorial 6: remapping ports between trees and subtrees
+
+This tutorial modifies only the xml file, there is no c++ implementation and clearly explains the concept:
+https://www.behaviortree.dev/tutorial_06_subtree_ports/
+
 ## 7. Next steps
 - continue with the official tutorials
 - create our own behaviour tree description
