@@ -29,17 +29,14 @@ int main(int argc, char * argv[])
     // Registering a SimpleActionNode using a function pointer.
     // you may also use C++11 lambdas instead of std::bind
     //factory.registerSimpleCondition("SpawnModel", std::bind(SpawnModel));
-    factory.registerSimpleCondition("Arm", std::bind(Arm));
-    factory.registerSimpleCondition("TakeOff", std::bind(TakeOff));
-    factory.registerNodeType<FlyToB>("FlyToB");
-    factory.registerSimpleCondition("Land", std::bind(Land));
+
         
     // Trees are created at deployment-time (i.e. at run-time, but only 
     // once at the beginning). 
 
     // IMPORTANT: when the object "tree" goes out of scope, all the 
     // TreeNodes are destroyed
-    auto tree = factory.createTreeFromFile("/home/reka/foxy2_ws/src/scenarios/xml/missionAB_tree.xml");
+    auto tree = factory.createTreeFromFile("/home/reka/foxy2_ws/src/scenarios/xml/ch_class3.xml");
     
     // To "execute" a Tree you need to "tick" it.
     // The tick is propagated to the children based on the logic of the tree.

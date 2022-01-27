@@ -39,7 +39,7 @@ int main(int argc, char * argv[])
 
     // IMPORTANT: when the object "tree" goes out of scope, all the 
     // TreeNodes are destroyed
-    auto tree = factory.createTreeFromFile("/home/reka/foxy2_ws/src/scenarios/xml/missionAB_tree.xml");
+    auto tree = factory.createTreeFromFile("/home/reka/foxy2_ws/src/scenarios/xml/ch_class2.xml");
     
     // To "execute" a Tree you need to "tick" it.
     // The tick is propagated to the children based on the logic of the tree.

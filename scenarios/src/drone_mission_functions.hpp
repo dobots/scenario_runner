@@ -8,12 +8,44 @@ void SleepMS(int ms)
 }
 
 
-// Simple function that return a NodeStatus
-BT::NodeStatus SpawnModel()
+//Simple function to start wind
+BT::NodeStatus Wind()
 {
-    std::cout << "[ SpawnModel: OK ]" << std::endl;
+    std::cout << "[ Start_wind: OK ]" << std::endl;
     return BT::NodeStatus::SUCCESS;
 }
+
+
+//Function to delete a model
+BT::NodeStatus DeleteModel(BT::TreeNode& self)
+{
+  Optional<std::string> msg = self.getInput<std::string>("model_name");
+  // Check if optional is valid. If not, throw its error
+  if (!msg)
+  {
+    throw BT::RuntimeError("missing required input [model_name]: ", msg.error());
+  }
+
+  // use the method value() to extract the valid model_name.
+  std::cout << "[ Delete model: " << msg.value() << " deleted ]" <<std::endl;
+  return NodeStatus::SUCCESS;
+}  
+
+
+// Simple function to spawn a model
+BT::NodeStatus SpawnModel(BT::TreeNode& self)
+{
+  Optional<std::string> msg = self.getInput<std::string>("model_name");
+  // Check if optional is valid. If not, throw its error
+  if (!msg)
+  {
+    throw BT::RuntimeError("missing required input [model_name]: ", msg.error());
+  }
+
+  // use the method value() to extract the valid model_name.
+  std::cout << "[ Spawn model: " << msg.value() << " spawned ]" <<std::endl;
+  return NodeStatus::SUCCESS;
+} 
 
 
 // Simple function that return a NodeStatus
@@ -73,7 +105,8 @@ BT::NodeStatus FlyToB::tick()
     return NodeStatus::SUCCESS;
 }
 
-    
+
+  
   
 
 
