@@ -1,0 +1,18 @@
+<root main_tree_to_execute = "MainTree" >
+
+<BehaviorTree ID="DroneMissionAB">
+        <Sequence name="root_sequence">
+            <SpawnModel   name="spawn_model"/>
+            <Arm          name="arm" />
+            <TakeOff      name="take_off" />
+            <FlyToB       name="fly_to_B" />
+            <Land         name="land"     />
+        </Sequence>
+     </BehaviorTree>
+
+     <BehaviorTree ID="MainTree">
+        <SubTree ID="DroneMissionAB" />
+     </BehaviorTree>
+
+
+ </root>
