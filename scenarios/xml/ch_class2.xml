@@ -9,5 +9,16 @@
             <Land         name="land"     />
         </Sequence>
      </BehaviorTree>
+     
+    <!-- the BT executor don't require this, but Groot does -->     
+    <TreeNodeModel>
+        <Action ID="SpawnModel">
+            <input_port name="model_name" type="std::string" />
+        </Action>
+        <Action ID="Arm"/>
+        <Action ID="TakeOff"/>
+        <Action ID="FlyToB"/>      
+        <Action ID="Land"/>   
+    </TreeNodeModel>
 
  </root>

@@ -5,6 +5,9 @@
 
 #include "drone_mission_functions.hpp"
 
+#include "behaviortree_cpp_v3/loggers/bt_cout_logger.h"
+#include <behaviortree_cpp_v3/loggers/bt_zmq_publisher.h>
+
 using namespace BT;
 
 /*void SleepMS(int ms)
@@ -31,7 +34,8 @@ int main(int argc, char * argv[])
     //factory.registerSimpleCondition("SpawnModel", std::bind(SpawnModel));
     factory.registerSimpleCondition("Arm", std::bind(Arm));
     factory.registerSimpleCondition("TakeOff", std::bind(TakeOff));
-    factory.registerNodeType<FlyToB>("FlyToB");
+    factory.registerSimpleCondition("FlyToB", std::bind(FlyToB));
+    //factory.registerNodeType<FlyToB>("FlyToB");
     factory.registerSimpleCondition("Land", std::bind(Land));
         
     // Trees are created at deployment-time (i.e. at run-time, but only 
@@ -41,11 +45,25 @@ int main(int argc, char * argv[])
     // TreeNodes are destroyed
     auto tree = factory.createTreeFromFile("/home/reka/foxy2_ws/src/scenarios/xml/ch_class2.xml");
     
+    // This logger prints state changes on console
+    StdCoutLogger logger_cout(tree);
+
+    printTreeRecursively(tree.rootNode());
+    
+    //#ifdef ZMQ_FOUND
+    // This logger publish status changes using ZeroMQ. Used by Groot
+    PublisherZMQ publisher_zmq(tree);
+    //std::cout << "publisher" << publisher_zmq << std::endl;
+    //#endif
+    
+    
     // To "execute" a Tree you need to "tick" it.
     // The tick is propagated to the children based on the logic of the tree.
     // In this case, the entire sequence is executed, because all the children
     // of the Sequence return SUCCESS.
     tree.tickRoot();
+
+    
     //SleepMS(150);
   
   rclcpp::shutdown();

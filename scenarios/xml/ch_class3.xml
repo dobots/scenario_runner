@@ -6,4 +6,11 @@
         </Sequence>
      </BehaviorTree>
      
+     <!-- the BT executor don't require this, but Groot does -->     
+    <TreeNodeModel>
+        <Action ID="SpawnModel">
+            <input_port name="model_name" type="std::string" />
+        </Action>
+    </TreeNodeModel>
+     
  </root>

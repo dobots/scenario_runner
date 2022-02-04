@@ -5,6 +5,8 @@
 
 #include "drone_mission_functions.hpp"
 
+#include <behaviortree_cpp_v3/loggers/bt_zmq_publisher.h>
+
 using namespace BT;
 
 /*void SleepMS(int ms)
@@ -37,6 +39,9 @@ int main(int argc, char * argv[])
     // IMPORTANT: when the object "tree" goes out of scope, all the 
     // TreeNodes are destroyed
     auto tree = factory.createTreeFromFile("/home/reka/foxy2_ws/src/scenarios/xml/ch_class3.xml");
+    
+    // This logger publish status changes using ZeroMQ. Used by Groot
+    PublisherZMQ publisher_zmq(tree);
     
     // To "execute" a Tree you need to "tick" it.
     // The tick is propagated to the children based on the logic of the tree.

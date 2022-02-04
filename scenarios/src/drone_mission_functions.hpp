@@ -69,7 +69,7 @@ BT::NodeStatus TakeOff()
 
 
 // SyncActionNode (synchronous action) with an input port.
-class FlyToB : public SyncActionNode
+/*class FlyToB : public SyncActionNode
 {
   public:
     // If your Node has ports, you must use this constructor signature 
@@ -103,7 +103,26 @@ BT::NodeStatus FlyToB::tick()
 
     std::cout << "[ Flying: FINISHED ]" << std::endl;
     return NodeStatus::SUCCESS;
+}*/
+
+
+BT::NodeStatus FlyToB()
+{
+    std::cout << "[ Flying: STARTED ]" << std::endl;
+
+
+    int count = 0;
+    // Pretend that "computing" takes 2500 milliseconds.
+    while (count++ < 250)
+    {
+        SleepMS(10);
+    }
+
+    std::cout << "[ Flying: FINISHED ]" << std::endl;
+    return BT::NodeStatus::SUCCESS;
 }
+
+
 
 
   
@@ -115,6 +134,7 @@ BT::NodeStatus FlyToB::tick()
 
 BT::NodeStatus Land()
 {
+ 
     std::cout << "[ Land: OK ]" << std::endl;
     return BT::NodeStatus::SUCCESS;
 }
