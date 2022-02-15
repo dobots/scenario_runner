@@ -4,6 +4,7 @@
 #include "rclcpp/rclcpp.hpp"
 
 #include "drone_mission_functions.hpp"
+#include "spawn_model.hpp"
 
 #include "behaviortree_cpp_v3/loggers/bt_cout_logger.h"
 #include <behaviortree_cpp_v3/loggers/bt_zmq_publisher.h>
@@ -26,8 +27,8 @@ int main(int argc, char * argv[])
     // SimpleActionNodes can not define their own method providedPorts().
     // We should pass a PortsList explicitly if we want the Action to 
     // be able to use getInput() or setOutput();
-    PortsList model_name_ports = { InputPort<std::string>("model_name") };
-    factory.registerSimpleAction("SpawnModel", SpawnModel,             model_name_ports ); 
+    //PortsList model_name_ports = { InputPort<std::string>("model_name") };
+    //factory.registerSimpleAction("SpawnModel", SpawnModel,             model_name_ports ); 
  
     // Registering a SimpleActionNode using a function pointer.
     // you may also use C++11 lambdas instead of std::bind

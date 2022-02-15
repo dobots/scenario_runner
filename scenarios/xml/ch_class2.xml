@@ -2,7 +2,7 @@
 
 <BehaviorTree ID="MainTree">
         <Sequence name="root_sequence">
-            <SpawnModel   name="spawn_model" model_name="foreign_uav"/>
+            <!--<SpawnModel   name="spawn_model" model_name="foreign_uav"/>-->
             <Arm          name="arm" />
             <TakeOff      name="take_off" />
             <FlyToB       name="fly_to_B" />

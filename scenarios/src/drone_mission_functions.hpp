@@ -33,7 +33,7 @@ BT::NodeStatus DeleteModel(BT::TreeNode& self)
 
 
 // Simple function to spawn a model
-BT::NodeStatus SpawnModel(BT::TreeNode& self)
+/*BT::NodeStatus SpawnModel(BT::TreeNode& self)
 {
   Optional<std::string> msg = self.getInput<std::string>("model_name");
   // Check if optional is valid. If not, throw its error
@@ -45,7 +45,10 @@ BT::NodeStatus SpawnModel(BT::TreeNode& self)
   // use the method value() to extract the valid model_name.
   std::cout << "[ Spawn model: " << msg.value() << " spawned ]" <<std::endl;
   return NodeStatus::SUCCESS;
-} 
+} */
+
+
+
 
 
 // Simple function that return a NodeStatus

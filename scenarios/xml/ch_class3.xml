@@ -2,7 +2,7 @@
 
 <BehaviorTree ID="MainTree">
         <Sequence name="root_sequence">
-            <SpawnModel   name="spawn_model" model_name="huge_building"/>
+            <SpawnModel   name="spawn_model" model_name="sphere" xml_desc="xml_blablal" />
         </Sequence>
      </BehaviorTree>
      

@@ -18,7 +18,10 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_action REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(gazebo_ros_pkgs REQUIRED)
+find_package(gazebo_msgs REQUIRED)
 find_package(behaviortree_cpp_v3 REQUIRED)
 
 #if(BUILD_TESTING)
@@ -32,6 +35,15 @@ find_package(behaviortree_cpp_v3 REQUIRED)
 #  ament_lint_auto_find_test_dependencies()
 #endif()
 
+set(dependencies
+  rclcpp
+  rclcpp_action
+  std_msgs
+  gazebo_ros_pkgs
+  gazebo_msgs
+  behaviortree_cpp_v3
+  ${OTHER_DEPS}
+)  
 
 #Add the executable and name it so you can run your node using ros2 run
 add_executable(ch_class1 src/ch_class1.cpp)
@@ -41,10 +53,13 @@ add_executable(ch_class2 src/ch_class2.cpp)
 ament_target_dependencies(ch_class2 rclcpp std_msgs behaviortree_cpp_v3)
 
 add_executable(ch_class3 src/ch_class3.cpp)
-ament_target_dependencies(ch_class3 rclcpp std_msgs behaviortree_cpp_v3)
+ament_target_dependencies(ch_class3 rclcpp std_msgs gazebo_ros_pkgs gazebo_msgs behaviortree_cpp_v3)
 
 add_executable(ch_class4 src/ch_class4.cpp)
 ament_target_dependencies(ch_class4 rclcpp std_msgs behaviortree_cpp_v3)
+
+#add_executable(test src/test.py)
+#ament_target_dependencies(test rclcpp std_msgs behaviortree_cpp_v3)
 
 #Finally, add the install(TARGETS..) section so ros2 run can find your executable
 install(TARGETS ch_class1 DESTINATION lib/${PROJECT_NAME})
