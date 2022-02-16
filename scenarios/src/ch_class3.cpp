@@ -44,7 +44,7 @@ int main(int argc, char * argv[])
     auto tree = factory.createTreeFromFile("/home/reka/foxy2_ws/src/scenarios/xml/ch_class3.xml");
     
     // This logger publish status changes using ZeroMQ. Used by Groot
-    PublisherZMQ publisher_zmq(tree);
+    //PublisherZMQ publisher_zmq(tree);
     
     // To "execute" a Tree you need to "tick" it.
     // The tick is propagated to the children based on the logic of the tree.

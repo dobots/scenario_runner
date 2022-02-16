@@ -2,7 +2,7 @@
 
 <BehaviorTree ID="MainTree">
         <Sequence name="root_sequence">
-            <SpawnModel   name="spawn_model" model_name="sphere" xml_desc="xml_blablal" />
+            <SpawnModel   name="spawn_model" model_name="sphere" file_path="/home/reka/foxy2_ws/src/cylinder_description/gazebo_model/cylinder_model/model.sdf" />
         </Sequence>
      </BehaviorTree>
      
