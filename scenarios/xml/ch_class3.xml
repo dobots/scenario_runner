@@ -2,7 +2,9 @@
 
 <BehaviorTree ID="MainTree">
         <Sequence name="root_sequence">
-            <SpawnModel   name="spawn_model" model_name="sphere" file_path="/home/reka/foxy2_ws/src/cylinder_description/gazebo_model/cylinder_model/model.sdf" />
+            <SpawnModel   name="spawn_model" model_name="blue_cylinder"  x="1" y="3" file_path="/home/reka/foxy2_ws/src/blue_cylinder_description/gazebo_model/blue_cylinder_model/model.sdf" />
+            <SpawnModel   name="spawn_model" model_name="red_cylinder" x="2.5" y="2" z= "1" file_path="/home/reka/foxy2_ws/src/red_cylinder_description/gazebo_model/red_cylinder_model/model.sdf" />
+            <SpawnModel   name="spawn_model" model_name="green_cylinder" x="4.5" y="1" z="0.5" file_path="/home/reka/foxy2_ws/src/green_cylinder_description/gazebo_model/green_cylinder_model/model.sdf" />
         </Sequence>
      </BehaviorTree>
      
