@@ -1,0 +1,21 @@
+<root main_tree_to_execute = "MainTree" >
+
+<BehaviorTree ID="MainTree">
+        <Sequence name="root_sequence">
+          <Repeat num_cycles = "10">
+            <SpawnModel   name="spawn_model" model_name="blue_cylinder"  x="rand" y="rand" z="rand" R="rand" P="rand" Y="rand" file_path="/home/reka/foxy2_ws/src/blue_cylinder_description/gazebo_model/blue_cylinder_model/model.sdf" />
+          </Repeat>  
+            <SpawnModel   name="spawn_model" model_name="red_cylinder" x="rand" y="rand" z="rand" R="rand" P="rand" Y="rand" file_path="/home/reka/foxy2_ws/src/red_cylinder_description/gazebo_model/red_cylinder_model/model.sdf" />
+            <SpawnModel   name="spawn_model" model_name="green_cylinder" x="rand" y="rand" z="rand" R="rand" P="rand" Y="rand" file_path="/home/reka/foxy2_ws/src/green_cylinder_description/gazebo_model/green_cylinder_model/model.sdf" />
+            
+        </Sequence>
+     </BehaviorTree>
+     
+     <!-- the BT executor don't require this, but Groot does -->     
+    <TreeNodeModel>
+        <Action ID="SpawnModel">
+            <input_port name="model_name" type="std::string" />
+        </Action>
+    </TreeNodeModel>
+     
+ </root>

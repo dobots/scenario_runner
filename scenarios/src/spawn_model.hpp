@@ -3,6 +3,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "geometry_msgs/msg/pose.hpp"
 #include "gazebo_msgs/srv/spawn_entity.hpp"
+#include "gazebo_msgs/srv/get_model_list.hpp"
 
 #include <chrono>
 #include <cstdlib>
@@ -14,6 +15,8 @@
 #include "../../pugixml-1.12/src/pugixml.cpp"
 
 #include <map>
+#include <tf2/LinearMath/Quaternion.h>
+#include<ctime>
 
 //For debugging
 #include <typeinfo>
@@ -51,26 +54,42 @@ auto readFile(std::shared_ptr<rclcpp::Node> node, std::string file_path){
      return xml_desc;          
   }
 
-       
-          
-          
-          
 
-/*auto quaternion_from_euler(float roll, pitch, yaw):
-    		cy = math.cos(yaw * 0.5)
-    		sy = math.sin(yaw * 0.5)
-    		cp = math.cos(pitch * 0.5)
-    		sp = math.sin(pitch * 0.5)
-    		cr = math.cos(roll * 0.5)
-    		sr = math.sin(roll * 0.5)
+/*auto calculatePose(){
 
-    		q = [0] * 4
-    		q[0] = cy * cp * cr + sy * sp * sr
-    		q[1] = cy * cp * sr - sy * sp * cr
-    		q[2] = sy * cp * sr + cy * sp * cr
-    		q[3] = sy * cp * cr - cy * sp * sr
-
-    	return q*/
+        geometry_msgs::msg::Pose initial_pose;
+        //Optional x,y,z, R,P,Y
+        std::map<std::string, float> received_pose;
+        received_pose["x"] = 0;
+        received_pose["y"] = 0;
+        received_pose["z"] = 0;
+        received_pose["R"] = 0;
+        received_pose["P"] = 0;
+        received_pose["Y"] = 0;
+        
+        std::string value;
+        for(auto item: received_pose) {
+            auto res =  BT::TreeNode::getInput<std::string> (item.first, value);
+            if (res){           	
+            	received_pose.at(item.first) = std::stof(value);           	
+            }
+         }
+         
+        initial_pose.position.x = received_pose["x"];
+        initial_pose.position.y = received_pose["y"];
+        initial_pose.position.z = received_pose["z"];
+        
+        tf2::Quaternion q;
+        q.setRPY(received_pose["R"],received_pose["P"],received_pose["Y"]);
+        
+        initial_pose.orientation.w = q[0];
+        initial_pose.orientation.x = q[1];
+        initial_pose.orientation.y = q[2];
+        initial_pose.orientation.z = q[3];  
+        
+        return initial_pose;
+        
+        }   */   
 
 
 using namespace BT;
@@ -84,7 +103,9 @@ class SpawnModel : public SyncActionNode
       : SyncActionNode(name, config)
     {
        node = rclcpp::Node::make_shared("spawn_entity_client");
-       client = node->create_client<gazebo_msgs::srv::SpawnEntity>("spawn_entity");
+       client_spawn = node->create_client<gazebo_msgs::srv::SpawnEntity>("spawn_entity");
+       client_model = node->create_client<gazebo_msgs::srv::GetModelList>("get_model_list");
+       srand(time(0));
     
      }
 
@@ -102,17 +123,14 @@ class SpawnModel : public SyncActionNode
            InputPort<std::string>("Y"),
            };
     }
+    
+
+    
 
     // Override the virtual function tick()
     virtual NodeStatus tick() override
     {
         std::string model_name;
-        std::string pose_x;
-        std::string pose_y;
-        std::string pose_z;
-        std::string pose_R;
-        std::string pose_P;
-        std::string pose_Y;
         std::string file_path;
        
         
@@ -129,8 +147,8 @@ class SpawnModel : public SyncActionNode
         
         
         
-        // Waiting for service /save
-        while (!client->wait_for_service(std::chrono::seconds(1))) {
+        // Waiting for spawn service /save
+        while (!client_spawn->wait_for_service(std::chrono::seconds(1))) {
             if (!rclcpp::ok()) {
                 RCLCPP_ERROR(node->get_logger(), "Interrupted while waiting for service /spawn_entity.");
                 return BT::NodeStatus::FAILURE;
@@ -138,13 +156,25 @@ class SpawnModel : public SyncActionNode
             RCLCPP_INFO(node->get_logger(), "Waiting for service /spawn_entity to appear...");
         }
         
+        // Waiting for model list service /save
+        while (!client_model->wait_for_service(std::chrono::seconds(1))) {
+            if (!rclcpp::ok()) {
+                RCLCPP_ERROR(node->get_logger(), "Interrupted while waiting for service /get_model_list.");
+                return BT::NodeStatus::FAILURE;
+            }
+            RCLCPP_INFO(node->get_logger(), "Waiting for service /get_model_list to appear...");
+        }
+        
+        
+        
         //Read file
         std:: string xml_desc = readFile(node, file_path);
                 
         
-        // Form requested Pose from arguments
-        geometry_msgs::msg::Pose pose_received;       
+        // Form requested Pose from arguments      
+        //geometry_msgs::msg::Pose initial_pose = calculatePose();
         
+        geometry_msgs::msg::Pose initial_pose;
         //Optional x,y,z, R,P,Y
         std::map<std::string, float> received_pose;
         received_pose["x"] = 0;
@@ -154,43 +184,71 @@ class SpawnModel : public SyncActionNode
         received_pose["P"] = 0;
         received_pose["Y"] = 0;
         
+        
         std::string value;
         for(auto item: received_pose) {
-            if (getInput<std::string> (item.first, value)){           	
-            	received_pose.at(item.first) = std::stof(value);           	
+            if (getInput<std::string> (item.first, value)){
+                if( value == "rand"){
+                 //generate a random number between -25 +25
+                 received_pose.at(item.first) = rand() % 53 -28;
+                 if(item.first == "z"){ received_pose.at(item.first) = rand() % 25;}
+                }else{
+                //else use the received position value           	
+            	received_pose.at(item.first) = std::stof(value);
+            	}           	
             }
          }
          
-        pose_received.position.x = received_pose["x"];
-        pose_received.position.y = received_pose["y"];
-        pose_received.position.z = received_pose["z"];
+        initial_pose.position.x = received_pose["x"];
+        initial_pose.position.y = received_pose["y"];
+        initial_pose.position.z = received_pose["z"];
         
+        tf2::Quaternion q;
+        q.setRPY(received_pose["R"],received_pose["P"],received_pose["Y"]);
         
-        pose_received.orientation.w = 0;
-        pose_received.orientation.x = 0;
-        pose_received.orientation.y = 0;
-        pose_received.orientation.z = 0;     
+        initial_pose.orientation.w = q[0];
+        initial_pose.orientation.x = q[1];
+        initial_pose.orientation.y = q[2];
+        initial_pose.orientation.z = q[3];    
+               
         
-        //python
-        /*initial_pose = Pose()
-
-        q = quaternion_from_euler(self.args.R, self.args.P, self.args.Y)
-        initial_pose.orientation.w = q[0]
-        initial_pose.orientation.x = q[1]
-        initial_pose.orientation.y = q[2]
-        initial_pose.orientation.z = q[3]  */  
+        //Send request to GetModelList service to update the model_name if it already exists
+        auto request_model_list = std::make_shared<gazebo_msgs::srv::GetModelList::Request>();
+        auto result_model_list = client_model->async_send_request(request_model_list);
         
+         // Wait for the result.
+         if (rclcpp::spin_until_future_complete(node, result_model_list) == rclcpp::FutureReturnCode::SUCCESS){
+             RCLCPP_INFO(node->get_logger(), "Result model list received");
+             //get the list of models
+             auto model_names = result_model_list.get()->model_names;
+             
+             int model_pcs=1;
+             std::string orig_model_name = model_name;
+             for(int i= 0; i<int(model_names.size()); i++){
+                 //if the name already exists append a number to it and start the loop again with the new name
+                 if(model_names[i] == model_name){
+                     std::cout<<model_names[i]<<" "<< model_name<<std::endl;
+                     model_name = orig_model_name + std::to_string(model_pcs); 
+                     model_pcs++;
+                     i = 0;
+                 }
+             }
+             
+         } else {
+             RCLCPP_ERROR(node->get_logger(), "Failed to call service /get_model_list");
+         }
+         
+         
         
-    
             
             
         //Send the request to the SpawnEntity service
         auto request = std::make_shared<gazebo_msgs::srv::SpawnEntity::Request>();
         request->name = model_name;
         request->xml = xml_desc;
-        request->initial_pose = pose_received;
+        request->initial_pose = initial_pose;
         
-        auto result = client->async_send_request(request);
+        auto result = client_spawn->async_send_request(request);
 
         
         if (rclcpp::spin_until_future_complete(node, result) != rclcpp::FutureReturnCode::SUCCESS) {
@@ -208,7 +266,8 @@ class SpawnModel : public SyncActionNode
     
     private:
         std::shared_ptr<rclcpp::Node> node;
-        rclcpp::Client<gazebo_msgs::srv::SpawnEntity>::SharedPtr client;
+        rclcpp::Client<gazebo_msgs::srv::SpawnEntity>::SharedPtr client_spawn;
+        rclcpp::Client<gazebo_msgs::srv::GetModelList>::SharedPtr client_model;
 
 };
 

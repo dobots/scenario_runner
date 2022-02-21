@@ -55,6 +55,12 @@ ament_target_dependencies(ch_class2 rclcpp std_msgs behaviortree_cpp_v3)
 add_executable(ch_class3 src/ch_class3.cpp)
 ament_target_dependencies(ch_class3 rclcpp std_msgs gazebo_ros_pkgs gazebo_msgs behaviortree_cpp_v3)
 
+add_executable(spawn_random_pos src/spawn_random_pos.cpp)
+ament_target_dependencies(spawn_random_pos rclcpp std_msgs gazebo_ros_pkgs gazebo_msgs behaviortree_cpp_v3)
+
+add_executable(spawn_multiple src/spawn_multiple.cpp)
+ament_target_dependencies(spawn_multiple rclcpp std_msgs gazebo_ros_pkgs gazebo_msgs behaviortree_cpp_v3)
+
 add_executable(ch_class4 src/ch_class4.cpp)
 ament_target_dependencies(ch_class4 rclcpp std_msgs behaviortree_cpp_v3)
 
@@ -65,6 +71,8 @@ ament_target_dependencies(ch_class4 rclcpp std_msgs behaviortree_cpp_v3)
 install(TARGETS ch_class1 DESTINATION lib/${PROJECT_NAME})
 install(TARGETS ch_class2 DESTINATION lib/${PROJECT_NAME})
 install(TARGETS ch_class3 DESTINATION lib/${PROJECT_NAME})
+install(TARGETS spawn_random_pos DESTINATION lib/${PROJECT_NAME})
+install(TARGETS spawn_multiple DESTINATION lib/${PROJECT_NAME})
 install(TARGETS ch_class4 DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
