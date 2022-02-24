@@ -178,9 +178,7 @@ class SpawnModel : public SyncActionNode
         std:: string xml_desc = readFile(node, file_path);
                 
         
-        // Form requested Pose from arguments      
-        //geometry_msgs::msg::Pose initial_pose = calculatePose();
-        
+        // Form requested Pose from arguments             
         geometry_msgs::msg::Pose initial_pose;
         //Optional x,y,z, R,P,Y
         std::map<std::string, float> received_pose;
@@ -190,16 +188,7 @@ class SpawnModel : public SyncActionNode
         received_pose["R"] = 0;
         received_pose["P"] = 0;
         received_pose["Y"] = 0;
-        
-        //Optional values for the max_range in case of random numbers
-        std::map<std::string, float> rand_max_range;
-        rand_max_range["x_rmax"] = MAX_RANGE;
-        rand_max_range["y_rmax"] = MAX_RANGE;
-        rand_max_range["z_rmax"] = MAX_RANGE;
-        rand_max_range["R_rmax"] = MAX_RANGE;
-        rand_max_range["P_rmax"] = MAX_RANGE;
-        rand_max_range["Y_rmax"] = MAX_RANGE;
-        
+               
         
         std::string value;
         for(auto item: received_pose) {
@@ -210,7 +199,7 @@ class SpawnModel : public SyncActionNode
                    std::string max_range_str;
                    int max_range;
                    if(getInput<std::string> ( (item.first + "_rmax"), max_range_str)){
-                     std::cout<<"max range found!!!"<<item.first<<std::endl;
+                     //std::cout<<"max range found!!!"<<item.first<<std::endl;
                      max_range = std::stoi(max_range_str);
                    }else{
                    max_range= MAX_RANGE;
