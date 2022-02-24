@@ -21,6 +21,7 @@
 //For debugging
 #include <typeinfo>
 
+const int MAX_RANGE=25;
 
 //opens the file and the file_path and stores it content in the xml_desc variable
 auto readFile(std::shared_ptr<rclcpp::Node> node, std::string file_path){
@@ -121,6 +122,12 @@ class SpawnModel : public SyncActionNode
            InputPort<std::string>("R"),
            InputPort<std::string>("P"),
            InputPort<std::string>("Y"),
+           InputPort<std::string>("x_rmax"),
+           InputPort<std::string>("y_rmax"),
+           InputPort<std::string>("z_rmax"),
+           InputPort<std::string>("R_rmax"),
+           InputPort<std::string>("P_rmax"),
+           InputPort<std::string>("Y_rmax"),
            };
     }
     
@@ -184,16 +191,38 @@ class SpawnModel : public SyncActionNode
         received_pose["P"] = 0;
         received_pose["Y"] = 0;
         
+        //Optional values for the max_range in case of random numbers
+        std::map<std::string, float> rand_max_range;
+        rand_max_range["x_rmax"] = MAX_RANGE;
+        rand_max_range["y_rmax"] = MAX_RANGE;
+        rand_max_range["z_rmax"] = MAX_RANGE;
+        rand_max_range["R_rmax"] = MAX_RANGE;
+        rand_max_range["P_rmax"] = MAX_RANGE;
+        rand_max_range["Y_rmax"] = MAX_RANGE;
+        
         
         std::string value;
         for(auto item: received_pose) {
             if (getInput<std::string> (item.first, value)){
+                //if rand is received generate a random number
                 if( value == "rand"){
-                 //generate a random number between -25 +25
-                 received_pose.at(item.first) = rand() % 53 -28;
-                 if(item.first == "z"){ received_pose.at(item.first) = rand() % 25;}
-                }else{
-                //else use the received position value           	
+
+                   std::string max_range_str;
+                   int max_range;
+                   if(getInput<std::string> ( (item.first + "_rmax"), max_range_str)){
+                     std::cout<<"max range found!!!"<<item.first<<std::endl;
+                     max_range = std::stoi(max_range_str);
+                   }else{
+                   max_range= MAX_RANGE;
+                   }
+                    
+                   received_pose.at(item.first) = rand() % (2*max_range+1) -max_range;
+                   //if it is the z axis, then generate only positive numbers
+                   if(item.first == "z"){ received_pose.at(item.first) = rand() % max_range;}
+                 
+                 
+                //if a real value is received use it 
+                }else{         	
             	received_pose.at(item.first) = std::stof(value);
             	}           	
             }
