@@ -334,8 +334,8 @@ If  it can successfully spawn the entity it will return success, otherwise it wi
 
 
 ## Steps to create your own scenario
--create an xml description
--create a cpp file
+- create an xml description
+- create a cpp file
 - register each custom node and include its library
 - add to CMakeLists
 
