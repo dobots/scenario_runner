@@ -333,7 +333,15 @@ If  it can successfully spawn the entity it will return success, otherwise it wi
 ```
 
 
-## Template to create your own custom functions
+## Steps to create your own scenario
+-create an xml description
+-create a cpp file
+- register each custom node and include its library
+- add to CMakeLists
+
+
+## Steps to create your custom node function for a scenario
+- show 2 examples and walkthrough, the colourful image from previous presentations
 
 
 
