@@ -103,7 +103,9 @@ ros2 run scenarios spawn_multiple
 
 ## Code structure
 In this section we will walk through the structure of this ROS package and discuss in details each component needed for creating a scenario.
+
 **xml folder:** Contains the description of the behavior tree.
+
 In the previous example we have started the following spawn_multiple.xml file, which looks like the following:
 ```
 <root main_tree_to_execute = "MainTree" >
@@ -186,6 +188,7 @@ install(TARGETS spawn_multiple DESTINATION lib/${PROJECT_NAME})
 As already mentioned in the previous section, if you would like to use the already available nodes and create your own behavior trees, you don't need to worry about what is inside this function. On the other hand, if you would like to create a new custom node, it can be helpful to understand the logic behind this function.
 
 Let's examine this code piece-by-piece.
+
 At first we need to include all the necessary libraries:
 ```
 #include "behaviortree_cpp_v3/bt_factory.h"
@@ -197,6 +200,10 @@ At first we need to include all the necessary libraries:
 ...
 ```
 Notice, that we've included the gazebo service spawn_entity and the gazebo service get_model_list.
+
+Then we create a synchronous action node, just like we have already seen in the behavior tree tutorials.
+In the config we intialize the ROS node and the necessary clients, which will call the spawn and model_list services.
+Then we need to provide the list of input ports. The ports used here should be the same as the ports used in the xml file, when we call a SpawnModel type of node.
 ```
 // SyncActionNode (synchronous action) with an input port.
 class SpawnModel : public SyncActionNode
@@ -226,12 +233,12 @@ class SpawnModel : public SyncActionNode
            };
     }
 ```
-Then we create a synchronous action node, just like we have already seen in the behavior tree tutorials.
-In the config we intialize the ROS node and the necessary clients, which will call the spawn and model_list services.
 
-Then we need to provide the list of input ports. The ports used here should be the same as the ports used in the xml file, when we call a SpawnModel type of node.
+
 
 In the next section the "real" work happens, when we overwrite the virtual tick function. This is also based on the behavior trees tutorials.
+
+First we need to check whether the required ports are provided. If not we return an error. The rest of the ports are optional. If not provided, we will use a default value. 
 ```
  // Override the virtual function tick()
     virtual NodeStatus tick() override
@@ -248,7 +255,8 @@ In the next section the "real" work happens, when we overwrite the virtual tick 
             throw BT::RuntimeError("missing required input [file_path]");
         }
 ```
-First we need to check whether the required ports are provided. If not we return an error. The rest of the ports are optional. If not provided, we will use a default value.        
+
+Then we will wait for the spawn service and the model_list_service to become available.      
 
 ```        
         // Waiting for spawn service /save
@@ -263,7 +271,6 @@ First we need to check whether the required ports are provided. If not we return
         // Waiting for model list service /save
         ...
 ```
-Then we will wait for the spawn service and the model_list_service to become available.
 
 In the next section we will read the file path, open the xml description of the robot in this path and process it. Then we will store the description in the xml_desc variable.  (for the full implementation, check the github source) 
 ```                   
