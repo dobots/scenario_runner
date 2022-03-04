@@ -7,7 +7,7 @@ Behaviour trees can be graphically represented as trees, which makes it easy for
 
 - composite nodes,
 
--execution nodes.
+- execution nodes.
 
 For each pair of nodes the outgoing node is called parent and the incoming node is called child. The root has only one child and no parent. The control flow node has one parent and at least one child. The execution node, also called leaf node has no child only a parent.
 
