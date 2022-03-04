@@ -8,9 +8,13 @@ The scenario runner consists of multiple parts. The scenario runner is based on 
 
 ## Structure
 This repository contains the following folders:
+
 **bt_demo :** Contains tutorials on how to create behaviour trees. It is based on the official tutorials of the behaviortree.CPP library.
+
 **img :** Contains the images used in the documentation
+
 **pugixml-1.12 :** Is a small library used in the processing of xml files
+
 **scenarios :**  This is a  ROS2 package containing all the source files needed to run scenarios. 
 
 ## Install instructions
