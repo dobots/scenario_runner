@@ -1,5 +1,5 @@
 # Behaviortree.cpp tutorial 
-Behaviour trees can create very complex tasks composed of simple ones. A simple behaviour tree can already make an non-player character look smart, which makes behaviour trees extremely popular in game development.
+Behaviour trees can create very complex tasks composed of simple ones. In game development behaviour trees are extremely popular, because even a simple behaviour tree can make an non-player character look smart.
 
 Behaviour trees can be graphically represented as trees, which makes it easy for humans to understand and debug. It consists of nodes which can be classified as:
 
@@ -11,18 +11,22 @@ Behaviour trees can be graphically represented as trees, which makes it easy for
 
 For each pair of nodes the outgoing node is called parent and the incoming node is called child. The root has only one child and no parent. The control flow node has one parent and at least one child. The execution node, also called leaf node has no child only a parent.
 
+<p align="center">
+<img src="https://github.com/dobots/scenario_runner/blob/main/img/wiki_bt.png" width = "600" /> 
+</p>
+
 Source: [https://www.wikiwand.com/en/Behavior_tree_(artificial_intelligence,_robotics_and_control)](https://www.wikiwand.com/en/Behavior_tree_(artificial_intelligence,_robotics_and_control))
 
 
 ## 0. Install behaviortree.cpp:
-If you haven't already installed behavior-tree from the previous page, then do it now.
+If you haven't already installed behavior-tree then you need to install it now to continue with the tutorials:
 
- 1. On Ubuntu, you are encouraged to install the following dependencies:
+ 1. To work with behavior trees you are encouraged to install the following dependencies:
  ```   
 sudo apt-get install libzmq3-dev libboost-dev
 ```
 
-2.  ROS2 users: You can easily install the package with the command
+2.  Then you need to install the ROS2 package:
 ```
 sudo apt-get install ros-$ROS_DISTRO-behaviortree-cpp-v3
 ```
@@ -47,7 +51,7 @@ colcon build
 ## 3. Create a ROS2 package called bt_demo
 
 In the next step we will create a new package called bt_demo in your workspace.
-You can either clone our bt_demo package, read through the tutorials and only execute the code or you can create your own bt_demo package and walk through the tutorials step-by-step. I would recommend the second option. This way you can use our bt_demo package for help and debugging.
+You can either clone our bt_demo package, read through the tutorials, and only execute the code or you can create your own bt_demo package, and walk through the tutorials step-by-step. I would recommend the second option. This way you can use our bt_demo package for help and debugging.
 
 3. Create a ROS2 package called bt_demo:
 ```
@@ -653,7 +657,7 @@ colcon build
 
 This tutorial explains how to create a comlex tree from simple trees:
 
-I would reccomend reading through the official tutorial:
+I would recommend reading through the official tutorial:
 https://www.behaviortree.dev/tutorial_05_subtrees/
 
 ```
@@ -691,9 +695,9 @@ On the c++ side we don't need to modify anything to use a tree composed of multi
 
 Most of these tutorials modify only the xml file, there is no c++ implementation and clearly explains the concept. Therefore, we will not provide any implementation neither: https://www.behaviortree.dev/tutorial_06_subtree_ports/
 
-## Groot (Optional) 
+## Groot visualization tool (Optional) 
 
-[Groot](https://github.com/BehaviorTree/Groot) is used to create, edit, and visualize behavior trees. Installing it takes some effort, but if you would like to give it a try follow the next steps. Otherwise it will not be needed to run the scenarios.
+[Groot](https://github.com/BehaviorTree/Groot) is used to create, edit, and visualize behavior trees. Installing it takes some effort, but if you would like to give it a try follow the next steps. It will not be needed to run the scenarios.
 
 ![groot](https://github.com/dobots/scenario_runner/blob/main/img/groot.png)
 
@@ -705,9 +709,11 @@ Install qt5 on ubuntu:
 https://wiki.qt.io/Install_Qt_5_on_Ubuntu
 
 Install dependencies:
+```
 sudo apt install qtbase5-dev libqt5svg5-dev libzmq3-dev libdw-dev
+```
 
-Follow compilation instructions Linux:
+Follow the compilation instructions for Linux:
 https://github.com/BehaviorTree/Groot
 ```
    git clone https://github.com/BehaviorTree/Groot.git
@@ -719,38 +725,47 @@ https://github.com/BehaviorTree/Groot
 ```
 ### Start the application
 
-Navigate into the build directory of groot and start the executable from the command line:
+Navigate into the build directory of Groot and start the executable from the command line:
 ```
 cd ~/Groot/build
 ./Groot
 ```
 
-To connect Groot and ROS you need to install ZeroMQ plugin. This is explained in the following tutorial. Although the sources to the packages are a little bit outdated I will provide links below to the newest packages to install:
+To connect Groot and ROS you need to install ZeroMQ plugin. This is explained in the following tutorial:
 https://medium.com/teamarimac/groot-with-ros-a8f7855f8e35
+
+The sources to the packages in the tutorial are a little bit outdated, therefore I will provide links below to the newest packages:
+
 
 Install dependencies:
 ```
 sudo apt-get install libtool pkg-config build-essential autoconf automake
 ```
-#This is a new package
+
+This is a new package:
 ```
 sudo apt-get install libzmq3-dev
 ```
+
 Install libsodium:
 https://doc.libsodium.org/installation
+
 Download a stable tarball of libsodium. I have used the following one: `libsodium-1.0.18-stable.tar.gz   `
 
-Then follow:
+Then execute the following commands:
 ```
 ./configure
 make && make check
 sudo make install
 ```
 
-ZeroMQ 4.1.2. release fails. Use therefore a newer version:
+ZeroMQ 4.1.2. release will fail. Use therefore a newer version:
+
 http://download.zeromq.org/
 
-Download the `zeromq-4.1.4.tar.gz` tarball from the website. Then:
+Download the `zeromq-4.1.4.tar.gz` tarball from the website. 
+
+Then:
 ```
 tar -xvf zeromq-4.1.4.tar.gz
 cd zeromq-4.1.4
@@ -762,7 +777,7 @@ sudo ldconfig
 
 ### Using Groot:
 
-1. editor mode: load an existing xml into groot:
+**1. Editor mode: load an existing xml into groot:**
 - you might get the error of custom nodes, then you need to register your nodes for Groot to  be able to visualize them:
 https://navigation.ros.org/tutorials/docs/using_groot.html#adding-a-custom-node
 - you also need to modify the xml for Groot:
@@ -770,7 +785,8 @@ https://www.behaviortree.dev/xml_format/
 
 
 
-2. Monitor the current tree:
+**2. Monitor the current tree:**
+
 You need to include the PublisherZMQ into your main script and include its library:
 ```
 #include <behaviortree_cpp_v3/loggers/bt_zmq_publisher.h>
@@ -784,10 +800,11 @@ int main(){
     }
 ```
 
-Then after running your script e.g.:
+Then you can start your script e.g.:
 ```
 ros2 run <your-package-name> <your-node-name>
 ```
+
 Click in Groot to connect and it will show the current tree.
 
 ![groot_bt](https://github.com/dobots/scenario_runner/blob/main/img/groot_bt.png)
