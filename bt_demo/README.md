@@ -725,38 +725,47 @@ https://github.com/BehaviorTree/Groot
 ```
 ### Start the application
 
-Navigate into the build directory of groot and start the executable from the command line:
+Navigate into the build directory of Groot and start the executable from the command line:
 ```
 cd ~/Groot/build
 ./Groot
 ```
 
-To connect Groot and ROS you need to install ZeroMQ plugin. This is explained in the following tutorial. Although the sources to the packages are a little bit outdated I will provide links below to the newest packages to install:
+To connect Groot and ROS you need to install ZeroMQ plugin. This is explained in the following tutorial:
 https://medium.com/teamarimac/groot-with-ros-a8f7855f8e35
+
+The sources to the packages in the tutorial are a little bit outdated, therefore I will provide links below to the newest packages:
+
 
 Install dependencies:
 ```
 sudo apt-get install libtool pkg-config build-essential autoconf automake
 ```
-#This is a new package
+
+This is a new package:
 ```
 sudo apt-get install libzmq3-dev
 ```
+
 Install libsodium:
 https://doc.libsodium.org/installation
+
 Download a stable tarball of libsodium. I have used the following one: `libsodium-1.0.18-stable.tar.gz   `
 
-Then follow:
+Then execute the following commands:
 ```
 ./configure
 make && make check
 sudo make install
 ```
 
-ZeroMQ 4.1.2. release fails. Use therefore a newer version:
+ZeroMQ 4.1.2. release will fail. Use therefore a newer version:
+
 http://download.zeromq.org/
 
-Download the `zeromq-4.1.4.tar.gz` tarball from the website. Then:
+Download the `zeromq-4.1.4.tar.gz` tarball from the website. 
+
+Then:
 ```
 tar -xvf zeromq-4.1.4.tar.gz
 cd zeromq-4.1.4
@@ -768,7 +777,7 @@ sudo ldconfig
 
 ### Using Groot:
 
-1. editor mode: load an existing xml into groot:
+**1. Editor mode: load an existing xml into groot:**
 - you might get the error of custom nodes, then you need to register your nodes for Groot to  be able to visualize them:
 https://navigation.ros.org/tutorials/docs/using_groot.html#adding-a-custom-node
 - you also need to modify the xml for Groot:
@@ -776,7 +785,8 @@ https://www.behaviortree.dev/xml_format/
 
 
 
-2. Monitor the current tree:
+**2. Monitor the current tree:**
+
 You need to include the PublisherZMQ into your main script and include its library:
 ```
 #include <behaviortree_cpp_v3/loggers/bt_zmq_publisher.h>
@@ -790,10 +800,11 @@ int main(){
     }
 ```
 
-Then after running your script e.g.:
+Then you can start your script e.g.:
 ```
 ros2 run <your-package-name> <your-node-name>
 ```
+
 Click in Groot to connect and it will show the current tree.
 
 ![groot_bt](https://github.com/dobots/scenario_runner/blob/main/img/groot_bt.png)
