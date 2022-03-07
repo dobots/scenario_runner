@@ -1,5 +1,5 @@
 # Behaviortree.cpp tutorial 
-Behaviour trees can create very complex tasks composed of simple ones. A simple behaviour tree can already make an non-player character look smart, which makes behaviour trees extremely popular in game development.
+Behaviour trees can create very complex tasks composed of simple ones. In game development behaviour trees are extremely popular, because even a simple behaviour tree can make an non-player character look smart.
 
 Behaviour trees can be graphically represented as trees, which makes it easy for humans to understand and debug. It consists of nodes which can be classified as:
 
@@ -11,18 +11,22 @@ Behaviour trees can be graphically represented as trees, which makes it easy for
 
 For each pair of nodes the outgoing node is called parent and the incoming node is called child. The root has only one child and no parent. The control flow node has one parent and at least one child. The execution node, also called leaf node has no child only a parent.
 
+<p align="center">
+<img src="https://github.com/dobots/scenario_runner/blob/main/img/wiki_bt.png" width = "600" /> 
+</p>
+
 Source: [https://www.wikiwand.com/en/Behavior_tree_(artificial_intelligence,_robotics_and_control)](https://www.wikiwand.com/en/Behavior_tree_(artificial_intelligence,_robotics_and_control))
 
 
 ## 0. Install behaviortree.cpp:
-If you haven't already installed behavior-tree from the previous page, then do it now.
+If you haven't already installed behavior-tree then you need to install it now to continue with the tutorials:
 
- 1. On Ubuntu, you are encouraged to install the following dependencies:
+ 1. To work with behavior trees you are encouraged to install the following dependencies:
  ```   
 sudo apt-get install libzmq3-dev libboost-dev
 ```
 
-2.  ROS2 users: You can easily install the package with the command
+2.  Then you need to install the ROS2 package:
 ```
 sudo apt-get install ros-$ROS_DISTRO-behaviortree-cpp-v3
 ```
@@ -47,7 +51,7 @@ colcon build
 ## 3. Create a ROS2 package called bt_demo
 
 In the next step we will create a new package called bt_demo in your workspace.
-You can either clone our bt_demo package, read through the tutorials and only execute the code or you can create your own bt_demo package and walk through the tutorials step-by-step. I would recommend the second option. This way you can use our bt_demo package for help and debugging.
+You can either clone our bt_demo package, read through the tutorials, and only execute the code or you can create your own bt_demo package, and walk through the tutorials step-by-step. I would recommend the second option. This way you can use our bt_demo package for help and debugging.
 
 3. Create a ROS2 package called bt_demo:
 ```
@@ -653,7 +657,7 @@ colcon build
 
 This tutorial explains how to create a comlex tree from simple trees:
 
-I would reccomend reading through the official tutorial:
+I would recommend reading through the official tutorial:
 https://www.behaviortree.dev/tutorial_05_subtrees/
 
 ```
@@ -691,9 +695,9 @@ On the c++ side we don't need to modify anything to use a tree composed of multi
 
 Most of these tutorials modify only the xml file, there is no c++ implementation and clearly explains the concept. Therefore, we will not provide any implementation neither: https://www.behaviortree.dev/tutorial_06_subtree_ports/
 
-## Groot (Optional) 
+## Groot visualization tool (Optional) 
 
-[Groot](https://github.com/BehaviorTree/Groot) is used to create, edit, and visualize behavior trees. Installing it takes some effort, but if you would like to give it a try follow the next steps. Otherwise it will not be needed to run the scenarios.
+[Groot](https://github.com/BehaviorTree/Groot) is used to create, edit, and visualize behavior trees. Installing it takes some effort, but if you would like to give it a try follow the next steps. It will not be needed to run the scenarios.
 
 ![groot](https://github.com/dobots/scenario_runner/blob/main/img/groot.png)
 
@@ -705,9 +709,11 @@ Install qt5 on ubuntu:
 https://wiki.qt.io/Install_Qt_5_on_Ubuntu
 
 Install dependencies:
+```
 sudo apt install qtbase5-dev libqt5svg5-dev libzmq3-dev libdw-dev
+```
 
-Follow compilation instructions Linux:
+Follow the compilation instructions for Linux:
 https://github.com/BehaviorTree/Groot
 ```
    git clone https://github.com/BehaviorTree/Groot.git
