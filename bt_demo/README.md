@@ -9,11 +9,12 @@ Behaviour trees can be graphically represented as trees, which makes it easy for
 
 - execution nodes.
 
-For each pair of nodes the outgoing node is called parent and the incoming node is called child. The root has only one child and no parent. The control flow node has one parent and at least one child. The execution node, also called leaf node has no child only a parent.
 
 <p align="center">
-<img src="https://github.com/dobots/scenario_runner/blob/main/img/wiki_bt.png" width = "600" /> 
+<img src="https://github.com/dobots/scenario_runner/blob/main/img/wiki_bt.png" width = "400" /> 
 </p>
+
+For each pair of nodes the outgoing node is called parent and the incoming node is called child. The root has only one child and no parent. The control flow node has one parent and at least one child. The execution node, also called leaf node has no child only a parent.
 
 Source: [https://www.wikiwand.com/en/Behavior_tree_(artificial_intelligence,_robotics_and_control)](https://www.wikiwand.com/en/Behavior_tree_(artificial_intelligence,_robotics_and_control))
 
