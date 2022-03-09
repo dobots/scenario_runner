@@ -20,7 +20,7 @@ Source: [https://www.wikiwand.com/en/Behavior_tree_(artificial_intelligence,_rob
 
 
 ## 0. Install behaviortree.cpp:
-If you haven't already installed behavior-tree then you need to install it now to continue with the tutorials:
+If you haven't already installed the ROS2 behavior-trees library then you need to install it now to continue with the tutorials:
 
  1. To work with behavior trees you are encouraged to install the following dependencies:
  ```   
