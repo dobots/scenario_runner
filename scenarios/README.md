@@ -406,20 +406,22 @@ In case you need a functionality, which is not implemented yet, you might need t
 At first, we will have a look at a function called `autodockclient`. It can be find in the the ADlink-ROS/BT_ros2 repository: https://github.com/Adlink-ROS/BT_ros2/blob/master/src/autodock_client.hpp
 
 The structure of these functions is very similar. 
-At first, you need to select a name for your class and initialize it with the same name. (see orange colour)
 
-Second, you need to select from the BT library,  from which class would you like to inherit. In the next examples, we will use a synchronous action node. ( see green colour)
+**Orange colour:** At first, you need to select a name for your class and initialize it with the same name. 
 
-In the initialization part, you need to initialize the ROS services, and ROS nodes, you would like to use. (see red colour)
+**Green colour:** Second, you need to select from the BT library,  from which class would you like to inherit from. In the next examples, we will use a synchronous action node. 
 
-Then you need to overwrite the `tick()` function. This is part is really, important! This is where you will include the functionality what you are expecting from this behaviour tree node. In addition, you need to return SUCCESS,RUNNING,or FAILURE NodeStates.
+**Red colour:** In the initialization part, you need to initialize the ROS services, and ROS nodes, you would like to use. 
+
+**Blue colour:** Then you need to overwrite the `tick()` function. This is part is really, important! This is where you will include the functionality what you are expecting from this behaviour tree node. In addition, you need to return SUCCESS,RUNNING,or FAILURE NodeStates.
 
 <p align="center">
 <img src="https://github.com/dobots/scenario_runner/blob/main/img/autodockclient.png" width = "700" /> 
 </p>
 For the full implementation please visit: https://github.com/Adlink-ROS/BT_ros2/blob/master/src/autodock_client.hpp
 
-In the image below, you can compare the structure with the previous function. The overall structure is the same. The interesting part is what happens in the `tick()` function.
+
+In the image below, you can compare the structure with the previous function. The overall structure is the same. The interesting part is what happens in the `tick()` function, which can be seen in the full implementation.
 
 <p align="center">
 <img src="https://github.com/dobots/scenario_runner/blob/main/img/interruptevent.png" width = "700" /> 
