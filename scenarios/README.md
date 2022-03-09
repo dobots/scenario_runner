@@ -355,14 +355,18 @@ If  it can successfully spawn the entity it will return success, otherwise it wi
 ## Steps to create your own scenario
 The necessary steps to create your own scenario will be familiar from the `bt_demo` tutorial. We need to follow the same steps as we did already in the first tutorial (https://github.com/dobots/scenario_runner/tree/main/bt_demo#3-create-the-source-files-to-check-battery-level) 
 
-1. Create an xml description. I would suggest to copy the [spawn_multiple.xml](https://github.com/dobots/scenario_runner/blob/main/scenarios/xml/spawn_multiple.xml) file. Then try to modify it slightly and save it under a new name.
+### 1. Create an xml description.
+I would suggest to copy the [spawn_multiple.xml](https://github.com/dobots/scenario_runner/blob/main/scenarios/xml/spawn_multiple.xml) file. Then try to modify it slightly and save it under a new name.
 
-2. In the next step we need to create the .cpp file, which will read the xml description, load the functions, and execute the behaviour tree. For this step I would suggest to copy the [spawn_multiple.cpp](https://github.com/dobots/scenario_runner/blob/main/scenarios/src/spawn_multiple.cpp) file. Then modify the name of the xml file to load your own xml description. 
+### 2. Create a .cpp file.
+We need to create a .cpp file which will read the xml description, load the functions, and execute the behaviour tree. For this step I would suggest to copy the [spawn_multiple.cpp](https://github.com/dobots/scenario_runner/blob/main/scenarios/src/spawn_multiple.cpp) file. Then modify the name of the xml file to load your own xml description. 
 >**Note:** If you would like to use additional behaviour tree nodes in your xml file, you need to include their functions in your .cpp file, and register them in the main part of the .cpp file.
 
 
-3. The last step is to include our new .cpp file in the CMakeLists, so after building the package ROS2 can find our executable. 
+### 3. Modify CMakeLists.txt
+The last step is to include our new .cpp file in the CMakeLists, so after building the package ROS2 can find our executable. 
 The behaviour_tree library should be already listed in the `find_package` section.
+
 ```
 #Add the executable and name it so you can run your node using ros2 run
 add_executable(<your_file_name> src/<your_file_name>.cpp)
@@ -372,7 +376,8 @@ ament_target_dependencies(<your_file_name> rclcpp std_msgs behaviortree_cpp_v3)
 install(TARGETS <your_file_name> DESTINATION lib/${PROJECT_NAME})
 ```
 
-4. Build your package
+### 4. Build your package
+
 ```
 source /opt/ros/foxy/setup.bash
 cd ~/<your_ws>
@@ -380,13 +385,15 @@ colcon build --packages-select scenarios
 . install/setup.bash
 ```
 
-5. Open a second terminal for Gazebo:
+### 5. Open a second terminal for Gazebo:
+
 ```
 source /usr/share/gazebo/setup.sh
 ros2 launch gazebo_ros gazebo.launch.py
 ```
 
-7. In the first terminal, where we have built the package, let's run our new scenario:
+### 6. In the first terminal, where we have built the package, let's run our new scenario:
+
 ```
 ros2 run scenarios <your_file_name>
 ```
