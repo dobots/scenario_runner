@@ -404,7 +404,8 @@ ros2 run scenarios <your_file_name>
 - show 2 examples and walkthrough, the colourful image from previous presentations
 
 
-
+![autodockclient.png](https://github.com/dobots/scenario_runner/blob/main/img/autodockclient.png)
+![interruptevent.png](https://github.com/dobots/scenario_runner/blob/main/img/interruptevent.png)
 
 
 
