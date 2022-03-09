@@ -401,12 +401,31 @@ ros2 run scenarios <your_file_name>
 
 
 ## Steps to create your custom node function for a scenario
-- show 2 examples and walkthrough, the colourful image from previous presentations
+In case you need a functionality, which is not implemented yet, you might need to create your own functions. Therefore, in the next section we will discuss the structure of 2 behaviour tree functions, which can call ROS2 services.
 
+At first, we will have a look at a function called `autodockclient`. It can be find in the the ADlink-ROS/BT_ros2 repository: https://github.com/Adlink-ROS/BT_ros2/blob/master/src/autodock_client.hpp
 
-![autodockclient.png](https://github.com/dobots/scenario_runner/blob/main/img/autodockclient.png)
-![interruptevent.png](https://github.com/dobots/scenario_runner/blob/main/img/interruptevent.png)
+The structure of these functions is very similar. 
+At first, you need to select a name for your class and initialize it with the same name. (see orange colour)
 
+Second, you need to select from the BT library,  from which class would you like to inherit. In the next examples, we will use a synchronous action node. ( see green colour)
+
+In the initialization part, you need to initialize the ROS services, and ROS nodes, you would like to use. (see red colour)
+
+Then you need to overwrite the `tick()` function. This is part is really, important! This is where you will include the functionality what you are expecting from this behaviour tree node. In addition, you need to return SUCCESS,RUNNING,or FAILURE NodeStates.
+
+<p align="center">
+<img src="https://github.com/dobots/scenario_runner/blob/main/img/autodockclient.png" width = "700" /> 
+</p>
+For the full implementation please visit: https://github.com/Adlink-ROS/BT_ros2/blob/master/src/autodock_client.hpp
+
+In the image below, you can compare the structure with the previous function. The overall structure is the same. The interesting part is what happens in the `tick()` function.
+
+<p align="center">
+<img src="https://github.com/dobots/scenario_runner/blob/main/img/interruptevent.png" width = "700" /> 
+</p>
+
+For the full implementation please visit: https://github.com/Adlink-ROS/BT_ros2/blob/master/src/interrupt_event.hpp
 
 
 
