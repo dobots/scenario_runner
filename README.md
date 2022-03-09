@@ -4,7 +4,7 @@ The scenario runner makes it possible to create multiple different environments 
 
 The training of machine learning algorithms in simulation requires many different simulation environments with slight modifications. Hundreds of simulations needs to be started, which is highly time-consuming and a tedious task. Therefore, we have come up with the idea of creating a scenario runner, which would automate this process. In addition, it would also make the experiments reproducible, which is really important for debugging and developing.
 
-The scenario runner consists of multiple parts. The scenario runner is based on behaviour trees. The required scenario’s behaviour tree is described through the visual interface. The visual interface exports an xml scenario description file. This file is read and executed by the c++ library, which can handle behaviour trees. (see image)
+The scenario runner consists of multiple parts. It is based on behaviour trees. The required scenario’s behaviour tree is described through the visual interface. The visual interface exports an xml scenario description file. This file is read and executed by the c++ library, which can handle behaviour trees. (see image)
 
 <p align="center">
 <img src="https://github.com/dobots/scenario_runner/blob/main/img/overview.png" width = "700" /> 
