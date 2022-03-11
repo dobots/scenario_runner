@@ -130,54 +130,11 @@ class SpawnModel : public SyncActionNode
            InputPort<std::string>("Y_rmax"),
            };
     }
+ 
     
-
-    
-
-    // Override the virtual function tick()
-    virtual NodeStatus tick() override
-    {
-        std::string model_name;
-        std::string file_path;
-       
-        
-        //Check whether the required inputs are provided. If not throw an error
-        if (!getInput<std::string> ("model_name", model_name))
-        {
-            throw BT::RuntimeError("missing required input [model_name]");
-        }
-        
-        if (!getInput<std::string> ("file_path", file_path))
-        {
-            throw BT::RuntimeError("missing required input [file_path]");
-        }
-        
-        
-        
-        // Waiting for spawn service /save
-        while (!client_spawn->wait_for_service(std::chrono::seconds(1))) {
-            if (!rclcpp::ok()) {
-                RCLCPP_ERROR(node->get_logger(), "Interrupted while waiting for service /spawn_entity.");
-                return BT::NodeStatus::FAILURE;
-            }
-            RCLCPP_INFO(node->get_logger(), "Waiting for service /spawn_entity to appear...");
-        }
-        
-        // Waiting for model list service /save
-        while (!client_model->wait_for_service(std::chrono::seconds(1))) {
-            if (!rclcpp::ok()) {
-                RCLCPP_ERROR(node->get_logger(), "Interrupted while waiting for service /get_model_list.");
-                return BT::NodeStatus::FAILURE;
-            }
-            RCLCPP_INFO(node->get_logger(), "Waiting for service /get_model_list to appear...");
-        }
-        
-        
-        
-        //Read file
-        std:: string xml_desc = readFile(node, file_path);
-                
-        
+    //Convert the received pose to initial pose. If the received pose is rand, generate a random position
+    geometry_msgs::msg::Pose convertReceivedPose(){
+             
         // Form requested Pose from arguments             
         geometry_msgs::msg::Pose initial_pose;
         //Optional x,y,z, R,P,Y
@@ -228,9 +185,13 @@ class SpawnModel : public SyncActionNode
         initial_pose.orientation.x = q[1];
         initial_pose.orientation.y = q[2];
         initial_pose.orientation.z = q[3];    
-               
         
-        //Send request to GetModelList service to update the model_name if it already exists
+        return initial_pose;
+        }
+        
+        //Function to append a number to the model name in case it already exists
+        std::string updateModelName(std::string model_name){
+        
         auto request_model_list = std::make_shared<gazebo_msgs::srv::GetModelList::Request>();
         auto result_model_list = client_model->async_send_request(request_model_list);
         
@@ -245,7 +206,7 @@ class SpawnModel : public SyncActionNode
              for(int i= 0; i<int(model_names.size()); i++){
                  //if the name already exists append a number to it and start the loop again with the new name
                  if(model_names[i] == model_name){
-                     std::cout<<model_names[i]<<" "<< model_name<<std::endl;
+                     //std::cout<<model_names[i]<<" "<< model_name<<std::endl;
                      model_name = orig_model_name + std::to_string(model_pcs); 
                      model_pcs++;
                      i = 0;
@@ -256,16 +217,66 @@ class SpawnModel : public SyncActionNode
              RCLCPP_ERROR(node->get_logger(), "Failed to call service /get_model_list");
          }
          
-         
+         return model_name;       
+        }
+     
+     
+    // Override the virtual function tick()
+    virtual NodeStatus tick() override
+    {
+        std::string model_name;
+        std::string file_path;
+       
         
-            
-            
+        //Check whether the required inputs are provided. If not throw an error
+        if (!getInput<std::string> ("model_name", model_name))
+        {
+            throw BT::RuntimeError("missing required input [model_name]");
+        }
+        
+        if (!getInput<std::string> ("file_path", file_path))
+        {
+            throw BT::RuntimeError("missing required input [file_path]");
+        }
+        
+        
+        
+        // Waiting for spawn service /save
+        while (!client_spawn->wait_for_service(std::chrono::seconds(1))) {
+            if (!rclcpp::ok()) {
+                RCLCPP_ERROR(node->get_logger(), "Interrupted while waiting for service /spawn_entity.");
+                return BT::NodeStatus::FAILURE;
+            }
+            RCLCPP_INFO(node->get_logger(), "Waiting for service /spawn_entity to appear...");
+        }
+        
+        // Waiting for model list service /save
+        while (!client_model->wait_for_service(std::chrono::seconds(1))) {
+            if (!rclcpp::ok()) {
+                RCLCPP_ERROR(node->get_logger(), "Interrupted while waiting for service /get_model_list.");
+                return BT::NodeStatus::FAILURE;
+            }
+            RCLCPP_INFO(node->get_logger(), "Waiting for service /get_model_list to appear...");
+        }
+        
+        
+        
+        //Read file
+        std:: string xml_desc = readFile(node, file_path);
+        
+        //Calculate the initial pose based on the received values        
+        geometry_msgs::msg::Pose initial_pose = convertReceivedPose();
+             
+                 
+        //Send request to GetModelList service to update the model_name if it already exists
+        model_name = updateModelName(model_name);
+        
+        
         //Send the request to the SpawnEntity service
         auto request = std::make_shared<gazebo_msgs::srv::SpawnEntity::Request>();
         request->name = model_name;
         request->xml = xml_desc;
         request->initial_pose = initial_pose;
-        
         auto result = client_spawn->async_send_request(request);
 
         
@@ -275,7 +286,6 @@ class SpawnModel : public SyncActionNode
         }
         
          RCLCPP_INFO(node->get_logger(), "Waiting for result of spawning an entity...");
-        //rclcpp::shutdown();
               
         // print some messages for feedback
         std::cout << "[ Spawn model: " << model_name << " spawned ]" <<std::endl;

@@ -114,7 +114,7 @@ int main(int argc, char * argv[])
     // of the Sequence return SUCCESS.
     //tree.tickRoot();
     
-    NodeStatus status;
+    /*BT::NodeStatus status;
 
     std::cout << "\n--- 1st executeTick() ---" << std::endl;
     status = tree.tickRoot();
@@ -127,7 +127,7 @@ int main(int argc, char * argv[])
     std::cout << "\n--- 3rd executeTick() ---" << std::endl;
     status = tree.tickRoot();
 
-    std::cout << std::endl;
+    std::cout << std::endl;*/
   
   rclcpp::shutdown();
   return 0;
