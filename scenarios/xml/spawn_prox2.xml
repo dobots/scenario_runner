@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="MainTree">
+    <!-- ////////// -->
+    <BehaviorTree ID="MainTree">
+        <Sequence>
+            <Sequence name="root_sequence">
+                <Repeat num_cycles="2">
+                    <Action ID="SpawnModel" key_name="" name="spawn_model"/>
+                </Repeat>
+                <Action ID="SpawnModel" key_name="" name="spawn_model"/>
+                <Action ID="SpawnModel" key_name="" name="spawn_model"/>
+            </Sequence>
+            <KeepRunningUntilFailure>
+                <Inverter>
+                    <Condition ID="CheckProximity" name="check_proximity"/>
+                </Inverter>
+            </KeepRunningUntilFailure>
+        </Sequence>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <TreeNodesModel>
+        <Condition ID="CheckProximity"/>
+        <Action ID="SpawnModel">
+            <input_port name="key_name"/>
+        </Action>
+    </TreeNodesModel>
+    <!-- ////////// -->
+</root>
+

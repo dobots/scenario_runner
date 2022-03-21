@@ -1,0 +1,26 @@
+<root>
+    <TreeNodesModel>
+        <Condition ID="CheckProximity">
+            <input_port name="actor_model_name"/>
+            <input_port name="ego_model_name"/>
+            <input_port name="min_distance"/>
+        </Condition>
+        <Action ID="SpawnModel">
+            <output_port name="P"/>
+            <input_port name="P_rmax"/>
+            <input_port name="R"/>
+            <input_port name="R_rmax"/>
+            <output_port name="Y"/>
+            <input_port name="Y_rmax"/>
+            <input_port name="file_path"/>
+            <input_port name="model_name"/>
+            <input_port name="x"/>
+            <input_port name="x_rmax"/>
+            <input_port name="y"/>
+            <input_port name="y_rmax"/>
+            <inout_port name="z"/>
+            <input_port name="z_rmax"/>
+        </Action>
+    </TreeNodesModel>
+</root>
+

@@ -199,18 +199,15 @@ class SpawnModel : public SyncActionNode
        
         
         //Check whether the required inputs are provided. If not throw an error
-        if (!getInput<string> ("model_name", model_name))
-        {
+        if (!getInput<string> ("model_name", model_name)){
             throw BT::RuntimeError("missing required input [model_name]");
         }
         
-        if (!getInput<string> ("file_path", file_path))
-        {
+        if (!getInput<string> ("file_path", file_path)) {
             throw BT::RuntimeError("missing required input [file_path]");
         }
         
-        
-        
+                
         // Waiting for spawn service /save
         while (!client_spawn->wait_for_service(chrono::seconds(1))) {
             if (!rclcpp::ok()) {
@@ -252,6 +249,7 @@ class SpawnModel : public SyncActionNode
         
         if (rclcpp::spin_until_future_complete(node, result) != rclcpp::FutureReturnCode::SUCCESS) {
             RCLCPP_ERROR(node->get_logger(), "Unable to call /spawn_entity");
+            RCLCPP_INFO(node->get_logger(), "SpawnModel: NodeStatus::FAILURE");
             return BT::NodeStatus::FAILURE;
         }
         
@@ -259,6 +257,7 @@ class SpawnModel : public SyncActionNode
               
         // print some messages for feedback
         cout << "[ Spawn model: " << model_name << " spawned ]" <<endl;
+        RCLCPP_INFO(node->get_logger(), "SpawnModel: NodeStatus::SUCCESS");
         return NodeStatus::SUCCESS;
     }
     

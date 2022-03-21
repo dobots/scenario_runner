@@ -1,0 +1,49 @@
+<root main_tree_to_execute = "MainTree" >
+
+<BehaviorTree ID="MainTree">
+      <Sequence>	
+        <Sequence name="root_sequence">                 
+          <Repeat num_cycles = "2">
+            <SpawnModel   name="spawn_model" model_name="blue_cylinder"  x="rand" y="rand" z="rand" R="rand" P="rand" Y="rand" file_path="/home/reka/foxy2_ws/src/blue_cylinder_description/gazebo_model/blue_cylinder_model/model.sdf" />
+          </Repeat>        
+            <SpawnModel   name="spawn_model" model_name="red_cylinder" x="rand" y="rand" z="rand" R="rand" P="rand" Y="rand" file_path="/home/reka/foxy2_ws/src/red_cylinder_description/gazebo_model/red_cylinder_model/model.sdf" /> 
+            <SpawnModel   name="spawn_model" model_name="green_cylinder" x="rand" y="rand" z="rand" R="rand" P="rand" Y="rand" file_path="/home/reka/foxy2_ws/src/green_cylinder_description/gazebo_model/green_cylinder_model/model.sdf" />
+         </Sequence>
+            
+            <KeepRunningUntilFailure>
+                <Inverter>
+            		<CheckProximity name="check_proximity" ego_model_name="blue_cylinder" actor_model_name="red_cylinder" min_distance="20"/>
+            	</Inverter>
+            </KeepRunningUntilFailure>	
+        </Sequence>
+     </BehaviorTree>
+     
+     
+     <!-- the BT executor don't require this, but Groot does -->     
+    <TreeNodeModel>
+        <Action ID="SpawnModel">
+            <input_port name="model_name" type="std::string" />
+            <input_port name="x" type="std::string" />
+            <input_port name="y" type="std::string" />
+            <input_port name="z" type="std::string" />
+            <input_port name="R" type="std::string" />
+            <input_port name="P" type="std::string" />
+            <input_port name="Y" type="std::string" />
+            <input_port name="x_rmax" type="std::string" />
+            <input_port name="y_rmax" type="std::string" />
+            <input_port name="z_rmax" type="std::string" />
+            <input_port name="R_rmax" type="std::string" />
+            <input_port name="P_rmax" type="std::string" />
+            <input_port name="Y_rmax" type="std::string" />
+            <input_port name="file_path" type="std::string" />
+        </Action>
+        
+        <Action ID="CheckProximity">
+            <input_port name="ego_model_name" type="std::string" />
+            <input_port name="actor_model_name" type="std::string" />
+            <input_port name="min_distance" type="std::string" />
+        </Action>
+         
+    </TreeNodeModel>
+     
+ </root>
