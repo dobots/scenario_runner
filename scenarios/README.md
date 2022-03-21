@@ -430,4 +430,50 @@ In the image below, you can compare the structure with the previous function. Th
 For the full implementation please visit: https://github.com/Adlink-ROS/BT_ros2/blob/master/src/interrupt_event.hpp
 
 
+## Check proximity function
+
+The proximity check function checks, whether two models are within a given radius of each other.
+It requires two model names and a distance value as an input. If the models are within the received distance it returns success, otherwise it returns failure. 
+
+For this node, we need Gazebo to publish the model states. To publish the model states we need to include the `gazebo_ros_state` plugin into our .sdf world file. 
+```
+<sdf version="1.6">
+<world name="default">
+...
+<plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
+<update_rate>1.0</update_rate>
+</plugin>
+...
+
+</world>
+</sdf>
+```
+
+There is an empty world file, including this plugin in our repository, which can be launched as the following:
+```
+cd ~/<your_ros2>_ws
+source /opt/ros/foxy/setup.bash 
+source /usr/share/gazebo/setup.sh 
+. install/setup.bash
+
+ros2 launch scenarios load_empty_world_gazebo.launch.py
+```
+
+Then in a new terminal we can launch our scenario containing a proximity check node:
+```
+cd ~/<your_ros2>_ws
+source /opt/ros/foxy/setup.bash 
+source /usr/share/gazebo/setup.sh 
+. install/setup.bash
+
+ros2 run scenarios spawn_prox
+```
+
+Then in the terminal it prints out the position of the received models, their distance. If this distance is smaller than the received distance it returns SUCCESS, otherwise it returns FAILURE.
+
+
+<p align="center">
+<img src="https://github.com/dobots/scenario_runner/blob/main/img/prox_success.png" width = "700" /> 
+</p>
+
 
