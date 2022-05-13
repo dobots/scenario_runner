@@ -72,6 +72,9 @@ ament_target_dependencies(spawn_prox rclcpp std_msgs gazebo_ros_pkgs gazebo_msgs
 add_executable(ch_class4 src/ch_class4.cpp)
 ament_target_dependencies(ch_class4 rclcpp std_msgs behaviortree_cpp_v3)
 
+
+
+
 install(
   DIRECTORY include launch scenarios src worlds xml
   DESTINATION share/${PROJECT_NAME}
@@ -86,9 +89,6 @@ install(PROGRAMS
   DESTINATION lib/${PROJECT_NAME}
 )
 
-
-#add_executable(test src/test.py)
-#ament_target_dependencies(test rclcpp std_msgs behaviortree_cpp_v3)
 
 #Finally, add the install(TARGETS..) section so ros2 run can find your executable
 install(TARGETS ch_class1 DESTINATION lib/${PROJECT_NAME})
