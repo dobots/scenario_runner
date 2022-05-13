@@ -234,6 +234,21 @@ It is a condition node. It might be useful to use it with the "retry until succe
             </RetryUntilSuccesful>
 ```
 
+## Running nodes in parallel
+To be able to run behavior tree nodes in parallel, you need to edit your function from synchronous action node to asynchronous action node:
+```
+// AsyncActionNode (asynchronous action) with an input port.
+class SpawnModel : public AsyncActionNode
+{
+  public:
+    YourNodeName(const std::string& name, const NodeConfiguration& config)
+      : AsyncActionNode(name, config)
+    {
+       ...   
+     }
+```
+
+
 ## Spawn model function
 As already mentioned in the previous section, if you would like to use the already available functions and create your own behavior trees, you don't need to worry about what is inside this function. On the other hand, if you would like to create a new custom function, it can be helpful to understand the logic behind it.
 
