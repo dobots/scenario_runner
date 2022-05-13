@@ -194,6 +194,45 @@ install(TARGETS spawn_multiple DESTINATION lib/${PROJECT_NAME})
   <depend>behaviortree_cpp_v3</depend>
 ```
 
+## List of available functions and how to call them in the xml file
+
+ ### SpawnModel:
+ ```
+ <SpawnModel   name="spawn_model" model_name="" x="" y="" z="" R="" P="" Y="" x_rmax="" y_rmax="" z_rmax="" R_rmax="" P_rmax="" Y_rmax="" file_path="<path_to_your_file>" />
+ ```
+ > If you would like to use a random position for the model use: x="rand", y="rand", etc. instead of a value x_rmax, y_rmax, etc. stands for the maximum range within the random number should be generated
+ 
+ It is possible to spawn both urdf and sdf models:
+ ```
+  <SpawnModel   name="spawn_model" model_name="my_robot" file_path="<path_to_your_urdf_file>/urdf/my_robot.urdf" />
+  ```
+  
+  ```      
+<SpawnModel   name="spawn_model" model_name="cow" x="10" y="0" z="0,6"  R="0" P="0" Y="0"  file_path="<path_to_your_sdf_file>/cow_model/model.sdf" />
+```
+As already mentioned it is also possible to spawn models at a random position:
+```
+<SpawnModel   name="spawn_model" model_name="green_cylinder" x="rand" y="rand" z="rand" R="rand" P="rand" Y="rand" file_path="<path_to_your_sdf_file>/model.sdf" />
+```
+ 
+ ### RunROSNode
+ It is possible to call any ROS node with this function. You just need to provide the package name, the name of the executable. It is optional to provide any parameters to the ROSnode.
+ 
+ ```
+ <RunROSNode   name="run_node" package_name=""  executable_name=""  params="" />
+ ```
+ e.g.:
+```
+<RunROSNode   name="run_node" package_name="move_actors"  executable_name="pub_modelstate.py"  params="--node='pub_modelstate' --name 'cow' --x '10' --y '0' --z '0.6'" />
+```
+
+ ### CheckProximity
+It is a condition node. It might be useful to use it with the "retry until succesful" decorator node.             
+```
+<RetryUntilSuccesful num_attempts="-1"> 
+            		<CheckProximity name="check_proximity" ego_model_name="blue_cylinder" actor_model_name="red_cylinder" min_distance="20"/>
+            </RetryUntilSuccesful>
+```
 
 ## Spawn model function
 As already mentioned in the previous section, if you would like to use the already available functions and create your own behavior trees, you don't need to worry about what is inside this function. On the other hand, if you would like to create a new custom function, it can be helpful to understand the logic behind it.
