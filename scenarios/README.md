@@ -1,17 +1,17 @@
 # Scenarios
 The scenario runner makes it possible to create multiple different environments with static and dynamic objects. The scenario runner consists of multiple parts. It is based on behaviour trees. The required scenario’s behaviour tree is described through the visual interface. The visual interface exports an xml scenario description file. This file is read and executed by the c++ library, which can handle behaviour trees. 
 
-For the implementation of scenario runners the c++ library has been chosen, which can process behaviour trees described in an xml format. Source: [https://www.behaviortree.dev/bt_basics/](https://www.behaviortree.dev/bt_basics/)
+For the implementation of scenario runners, the c++ library has been chosen, which can process behaviour trees described in an xml format. Source: [https://www.behaviortree.dev/bt_basics/](https://www.behaviortree.dev/bt_basics/)
 
 One of the main reasons for choosing this library was that the Navigation2 package of ROS2 is based on this library as well.
 
-“Nav2 uses behavior trees to call modular servers to complete an action. An action can be to compute a path, control effort, recovery, or any other navigation related action. These are each separate nodes that communicate with the behavior tree (BT) over a ROS action server. “
+“Nav2 uses behavior trees to call modular servers to complete an action. An action can be to compute a path, control effort, recovery, or any other navigation-related action. These are each separate nodes that communicate with the behavior tree (BT) over a ROS action server. “
 Source: https://navigation.ros.org/
 
 By selecting the same library as the navigation library, we can reuse the nodes implemented by the navigation package in our scenarios. This will speed up the implementation of scenarios.
 
 ## Useful sources
-To learn more about the concept of behavior trees I would suggest to read the following links:
+To learn more about the concept of behavior trees I would suggest reading through the following links:
 [https://www.wikiwand.com/en/Behavior_tree_(artificial_intelligence,_robotics_and_control)](https://www.wikiwand.com/en/Behavior_tree_(artificial_intelligence,_robotics_and_control))
 
 [https://www.gamedeveloper.com/programming/behavior-trees-for-ai-how-they-work](https://www.gamedeveloper.com/programming/behavior-trees-for-ai-how-they-work)
@@ -106,7 +106,7 @@ ros2 run scenarios spawn_multiple
 
 
 ## Code structure
-In this section we will walk through the structure of this ROS package and discuss in details each component needed for creating a scenario.
+In this section, we will walk through the structure of this ROS package and discuss in detail each component needed for creating a scenario.
 
 **xml folder:** Contains the description of the behavior tree.
 
@@ -130,10 +130,10 @@ In the image below you can see the behavior tree defined in the xml file.
 
 ![spawn_xml.png](https://github.com/dobots/scenario_runner/blob/main/img/spawn_xml.png)
 
-The behavior tree starts with the root, then in a sequence it executes its child nodes. The first one is a repeat node, which will execute its child node 10 times. It's child node is a spawn node, which will spawn a blue cylinder. After spawning 10 blue cylinders at a random position and orientation, the next spawn node will be executed. It will spawn a red_cylinder. Then, the last node will be executed which will spawn a green cylinder.
+The behavior tree starts with the root, then in a sequence, it executes its child nodes. The first one is a repeat node, which will execute its child node 10 times. Its child node is a spawn node, which will spawn a blue cylinder. After spawning 10 blue cylinders at a random position and orientation, the next spawn node will be executed. It will spawn a red_cylinder. Then, the last node will be executed which will spawn a green cylinder.
 
 **src folder:** Contains the source files, which will execute the behavior tree and all the necessary functions.
-In the previous example, we have executed the `spawn_multiple.cpp` file, which called the `spawn_multiple.xml` behaviour tree description file.
+In the previous example, we executed the `spawn_multiple.cpp` file, which called the `spawn_multiple.xml` behaviour tree description file.
 
 The `spawn_multiple.cpp` file looks like the following:
 ```
@@ -161,15 +161,15 @@ int main(int argc, char * argv[])
   return 0;
 }
 ```
-At first we need to include the behaviortree library, the cpp library and our custom function to spawn models (*spawn_model.hpp*).
+At first, we need to include the behaviortree library, the cpp library and our custom function to spawn models (*spawn_model.hpp*).
 
-Then in the main function we register our custom node type called "SpawnModel".
+Then in the main function, we register our custom node type called "SpawnModel".
 
 Then we read the xml file and create a tree from it. 
 
 Finally, we "tick" the tree node-by-node until the entire sequence is executed.
 
-**spawn_model.hpp:** This function will be discussed in more details in the next section. If you would like to use the already available functions and create your own behavior trees, you don't need to worry about what is inside this function. On the other hand, if you would like to create a new custom function, it can be helpful to understand the logic behind it.
+**spawn_model.hpp:** This function will be discussed in more detail in the next section. If you would like to use the already available functions and create your own behavior trees, you don't need to worry about what is inside this function. On the other hand, if you would like to create a new custom function, it can be helpful to understand the logic behind it.
 
 **CMakeLists.txt:** We need to modify our CMakeLists file and include our executables.
 In addition, we need to add the behavior tree library to the list of dependencies:
@@ -216,7 +216,7 @@ As already mentioned it is also possible to spawn models at a random position:
 ```
  
  ### RunROSNode
- It is possible to call any ROS node with this function. You just need to provide the package name, the name of the executable. It is optional to provide any parameters to the ROSnode.
+ It is possible to call any ROS node with this function. You just need to provide the package name, and the name of the executable. It is optional to provide any parameters to the ROSnode.
  
  ```
  <RunROSNode   name="run_node" package_name=""  executable_name=""  params="" />
@@ -268,7 +268,7 @@ Notice, that we've included the gazebo service `spawn_entity` and the gazebo ser
 
 Then we create a synchronous action node, just like we have already seen in the behavior tree tutorials.
 
-In the config we intialize the ROS node and the necessary clients, which will call the `spawn_entity` and `get_model_list` services.
+In the config, we intialise the ROS node and the necessary clients, which will call the `spawn_entity` and `get_model_list` services.
 
 Then we need to provide the list of input ports. The ports used here should be the same as the ports used in the xml file, when the SpawnModel behaviour tree node is called.
 ```
@@ -303,7 +303,7 @@ class SpawnModel : public SyncActionNode
 
 
 
-In the next section the "real" work happens, when we overwrite the virtual tick function. This is also based on the behavior trees tutorials.
+In the next section, the "real" work happens, when we overwrite the virtual tick function. This is also based on the behavior trees tutorials.
 
 ```
  // Override the virtual function tick()
@@ -321,7 +321,7 @@ In the next section the "real" work happens, when we overwrite the virtual tick 
             throw BT::RuntimeError("missing required input [file_path]");
         }
 ```
-First we need to check whether the required ports are provided. If not we return an error. The rest of the ports are optional. If not provided, we will use a default value. 
+First, we need to check whether the required ports are provided. If not we return an error. The rest of the ports are optional. If not provided, we will use a default value. 
 
 ```        
         // Waiting for spawn service /save
@@ -410,10 +410,10 @@ If  it can successfully spawn the entity it will return success, otherwise it wi
 The necessary steps to create your own scenario will be familiar from the `bt_demo` tutorial. We need to follow the same steps as we did already in the first tutorial (https://github.com/dobots/scenario_runner/tree/main/bt_demo#3-create-the-source-files-to-check-battery-level) 
 
 ### 1. Create an xml description.
-I would suggest to copy the [spawn_multiple.xml](https://github.com/dobots/scenario_runner/blob/main/scenarios/xml/spawn_multiple.xml) file. Then try to modify it slightly and save it under a new name.
+I would suggest copying the [spawn_multiple.xml](https://github.com/dobots/scenario_runner/blob/main/scenarios/xml/spawn_multiple.xml) file. Then try to modify it slightly and save it under a new name.
 
 ### 2. Create a .cpp file.
-We need to create a .cpp file which will read the xml description, load the functions, and execute the behaviour tree. For this step I would suggest to copy the [spawn_multiple.cpp](https://github.com/dobots/scenario_runner/blob/main/scenarios/src/spawn_multiple.cpp) file. Then modify the name of the xml file to load your own xml description. 
+We need to create a .cpp file which will read the xml description, load the functions, and execute the behaviour tree. For this step, I would suggest to copy the [spawn_multiple.cpp](https://github.com/dobots/scenario_runner/blob/main/scenarios/src/spawn_multiple.cpp) file. Then modify the name of the xml file to load your own xml description. 
 >**Note:** If you would like to use additional behaviour tree nodes in your xml file, you need to include their functions in your .cpp file, and register them in the main part of the .cpp file.
 
 
@@ -455,7 +455,7 @@ ros2 run scenarios <your_file_name>
 
 
 ## Steps to create your custom node function for a scenario
-In case you need a functionality, which is not implemented yet, you might need to create your own functions. Therefore, in the next section we will discuss the structure of 2 behaviour tree functions, which can call ROS2 services.
+In case you need functionality, which is not implemented yet, you might need to create your own functions. Therefore, in the next section, we will discuss the structure of 2 behaviour tree functions, which can call ROS2 services.
 
 At first, we will have a look at a function called `autodockclient`. It can be find in the the ADlink-ROS/BT_ros2 repository: https://github.com/Adlink-ROS/BT_ros2/blob/master/src/autodock_client.hpp
 
@@ -463,11 +463,11 @@ The structure of these functions is very similar.
 
 **Orange colour:** At first, you need to select a name for your class and initialize it with the same name. 
 
-**Green colour:** Second, you need to select from the BT library,  from which class would you like to inherit from. In the next examples, we will use a synchronous action node. 
+**Green colour:** Second, you need to select from the BT library, which class would you like to inherit from. In the next examples, we will use a synchronous action node. 
 
 **Red colour:** In the initialization part, you need to initialize the ROS services, and ROS nodes, you would like to use. 
 
-**Blue colour:** Then you need to overwrite the `tick()` function. This is part is really, important! This is where you will include the functionality what you are expecting from this behaviour tree node. In addition, you need to return SUCCESS,RUNNING,or FAILURE NodeStates.
+**Blue colour:** Then you need to overwrite the `tick()` function. This is part is really, important! This is where you will include the functionality that you are expecting from this behaviour tree node. In addition, you need to return SUCCESS,RUNNING,or FAILURE NodeStates.
 
 <p align="center">
 <img src="https://github.com/dobots/scenario_runner/blob/main/img/autodockclient.png" width = "700" /> 
@@ -487,7 +487,7 @@ For the full implementation please visit: https://github.com/Adlink-ROS/BT_ros2/
 ## Check proximity function
 
 The proximity check function checks, whether two models are within a given radius of each other.
-It requires two model names and a distance value as an input. If the models are within the received distance it returns success, otherwise it returns failure. 
+It requires two model names and a distance value as an input. If the models are within the received distance it returns success, otherwise, it returns failure. 
 
 For this node, we need Gazebo to publish the model states. To publish the model states we need to include the `gazebo_ros_state` plugin into our .sdf world file. 
 ```
@@ -523,7 +523,7 @@ source /usr/share/gazebo/setup.sh
 ros2 run scenarios spawn_prox
 ```
 
-Then in the terminal it prints out the position of the received models, their distance. If this distance is smaller than the received distance it returns SUCCESS, otherwise it returns FAILURE.
+Then in the terminal, it prints out the position of the received models, and their distance. If this distance is smaller than the received distance it returns SUCCESS, otherwise, it returns FAILURE.
 
 
 <p align="center">
