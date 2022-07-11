@@ -1,5 +1,5 @@
 # Behaviortree.cpp tutorial 
-Behaviour trees can create very complex tasks composed of simple ones. In game development behaviour trees are extremely popular, because even a simple behaviour tree can make an non-player character look smart.
+Behaviour trees can create very complex tasks composed of simple ones. In game development behaviour trees are extremely popular, because even a simple behaviour tree can make a non-player character look smart.
 
 Behaviour trees can be graphically represented as trees, which makes it easy for humans to understand and debug. It consists of nodes which can be classified as:
 
@@ -14,7 +14,7 @@ Behaviour trees can be graphically represented as trees, which makes it easy for
 <img src="https://github.com/dobots/scenario_runner/blob/main/img/wiki_bt.png" width = "400" /> 
 </p>
 
-For each pair of nodes the outgoing node is called parent and the incoming node is called child. The root has only one child and no parent. The control flow node has one parent and at least one child. The execution node, also called leaf node has no child only a parent.
+For each pair of nodes, the outgoing node is called the parent and the incoming node is called the child. The root has only one child and no parent. The control flow node has one parent and at least one child. The execution node, also called the leaf node has no child only a parent.
 
 Source: [https://www.wikiwand.com/en/Behavior_tree_(artificial_intelligence,_robotics_and_control)](https://www.wikiwand.com/en/Behavior_tree_(artificial_intelligence,_robotics_and_control))
 
@@ -31,7 +31,7 @@ sudo apt-get install libzmq3-dev libboost-dev
 ```
 sudo apt-get install ros-$ROS_DISTRO-behaviortree-cpp-v3
 ```
-For this tutorial we are using the `foxy` ROS-DISTRO.
+For this tutorial, we are using the `foxy` ROS-DISTRO.
 [Source](https://github.com/BehaviorTree/BehaviorTree.CPP)
 
 ## 2. Create a new workspace or use your existing workspace
@@ -51,7 +51,7 @@ colcon build
 
 ## 3. Create a ROS2 package called bt_demo
 
-In the next step we will create a new package called bt_demo in your workspace.
+In the next step, we will create a new package called bt_demo in your workspace.
 You can either clone our bt_demo package, read through the tutorials, and only execute the code or you can create your own bt_demo package, and walk through the tutorials step-by-step. I would recommend the second option. This way you can use our bt_demo package for help and debugging.
 
 3. Create a ROS2 package called bt_demo:
@@ -66,13 +66,13 @@ colcon build
 . install/setup.bash
 ```
 
-**NOTE: The rest of the tutorials is a copy of the official [behaviortree.CPP](https://www.behaviortree.dev/) tutorials. When we tried to follow these tutorials, we have faced many issues, and unclearity. Therefore, we have decided to provide additional information to help any beginners to follow and run these codes.**
+**NOTE: The rest of the tutorials is a copy of the official [behaviortree.CPP](https://www.behaviortree.dev/) tutorials. When we tried to follow these tutorials, we faced many issues and unclarity. Therefore, we have decided to provide additional information to help beginners to follow and run these codes.**
 
 ## 4. Read the theory
-Before we right dive into it, I would recommend to read the introduction and the "learn the basics" section at the official site: [https://www.behaviortree.dev/](https://www.behaviortree.dev/)
+Before we right dive into it, I would recommend reading the introduction and the "learn the basics" section at the official site: [https://www.behaviortree.dev/](https://www.behaviortree.dev/)
 
-## 3. Create the source files to check battery level
-In the next section you will start with a simplified version of the first tutorial. 
+## 3. Create the source files to check the battery level
+In the next section, you will start with a simplified version of the first tutorial. 
 
 1. Create an xml file called batterycheck_tree.xml which describes the behaviour tree:
 ```
@@ -154,7 +154,7 @@ ament_package()
 ![battery_check.png](https://github.com/dobots/scenario_runner/blob/main/img/batterycheck.png)
 
 ## 4. Add logging functionality
-In this section we will learn how to use logging.
+In this section, we will learn how to use logging.
 
 1. Copy the file called batterycheck.cpp and rename it to batterycheck_logger.cpp. Include the logger header at the top of the file:
 ```
@@ -316,7 +316,7 @@ private:
 Modify this new file by including the previous hpp file  and removing  the function descriptions. The final file should look like this:
 https://github.com/dobots/scenario_runner/blob/main/bt_demo/src/t01_create_tree_distr.cpp
 
-Thanks to the .hpp format, we don't need to create a .h and a .cpp file. Above all we don't need to compile them in a way to create libraries. The original tutorial is using traditional .h files, but it makes it more complicated to set up. I would recommend this solution.
+Thanks to the .hpp format, we don't need to create a .h and a .cpp file. Above all, we don't need to compile them in a way to create libraries. The original tutorial is using traditional .h files, but it makes it more complicated to set up. I would recommend this solution.
 
 3. Include the new t01_create_tree_distr.cpp in the CMakelists.txt:
 
@@ -493,7 +493,7 @@ colcon build
 ```
 
 3. Move into the src directory of this package and copy the file called t02_basic_ports.cpp. Rename it t03_generic_ports.
-From the main function replaces the nodes from the previous tutorial with the nodes from the tutorial:
+The main function replaces the nodes from the previous tutorial with the nodes from the tutorial:
 ```
 ...
   // We use the BehaviorTreeFactory to register our custom nodes
@@ -539,24 +539,24 @@ colcon build
 
 2) Call PrintTarget. The input "target" will be read from the Blackboard entry "GoalPosition".
 
-3) Use the built-in action SetBlackboard to write the key "OtherGoal".  A conversion from string to Position2D will be done under the hood.
+3) Use the built-in action SetBlackboard to write the key "OtherGoal".  Conversion from string to Position2D will be done under the hood.
 
 4) Call PrintTarget. The input "goal" will be read from the Blackboard entry "OtherGoal"."
 
 Quoted from: [https://github.com/BehaviorTree/BehaviorTree.CPP/blob/master/examples/t03_generic_ports.cpp](https://github.com/BehaviorTree/BehaviorTree.CPP/blob/master/examples/t03_generic_ports.cpp)
 
->**Notice that there is a built-in action SetBlackboard which enables to modify its values and keys directly.**
+>**Notice that there is a built-in action SetBlackboard which enables modification of its values and keys directly.**
 
 # Tutorial 4: sequences
 
 This tutorial explains the difference between a sequence node and a reactive sequence node.
 
-I would reccomend reading through the official tutorial:
+I would recommend reading through the official tutorial:
 https://www.behaviortree.dev/tutorial_04_sequence/
 
-We will not replicate this tutorial, because it has multiple bugs, dependencies and fixing them would be time consuming.
+We will not replicate this tutorial, because it has multiple bugs, and dependencies and fixing them would be time-consuming.
 
-Instead we will modify the first tutorial to show the effect of using reactive nodes.
+Instead, we will modify the first tutorial to show the effect of using reactive nodes.
 
 1. Copy the file t01.xml file and rename it to t04.xml. Open this file and modify this xml based on the tutorial to include a reactive sequence node:
 ```
@@ -656,7 +656,7 @@ colcon build
 
 # Tutorial 5: subtrees
 
-This tutorial explains how to create a comlex tree from simple trees:
+This tutorial explains how to create a complex tree from simple trees:
 
 I would recommend reading through the official tutorial:
 https://www.behaviortree.dev/tutorial_05_subtrees/
@@ -690,15 +690,15 @@ https://www.behaviortree.dev/tutorial_05_subtrees/
 </root>
 ```
 
-On the c++ side we don't need to modify anything to use a tree composed of multiple trees. Therefore, this tutorial doesn't have any implementation. In addition, it introduces the loggers, what we already discussed at the beggining of the tutorials. 
+On the c++ side, we don't need to modify anything to use a tree composed of multiple trees. Therefore, this tutorial doesn't have any implementation. In addition, it introduces the loggers, which we already discussed at the beginning of the tutorials. 
 
 # Tutorial 6-9: 
 
-Most of these tutorials modify only the xml file, there is no c++ implementation and clearly explains the concept. Therefore, we will not provide any implementation neither: https://www.behaviortree.dev/tutorial_06_subtree_ports/
+Most of these tutorials modify only the xml file, there is no c++ implementation and clearly explains the concept. Therefore, we will not provide any implementation either: https://www.behaviortree.dev/tutorial_06_subtree_ports/
 
 ## Groot visualization tool (Optional) 
 
-[Groot](https://github.com/BehaviorTree/Groot) is used to create, edit, and visualize behavior trees. Installing it takes some effort, but if you would like to give it a try follow the next steps. It will not be needed to run the scenarios.
+[Groot](https://github.com/BehaviorTree/Groot) is used for creating, editing, and visualizing behavior trees. Installing it takes some effort, but if you would like to give it a try follow the next steps. It will not be needed to run the scenarios.
 
 ![groot](https://github.com/dobots/scenario_runner/blob/main/img/groot.png)
 
@@ -778,7 +778,7 @@ sudo ldconfig
 
 ### Using Groot:
 
-**1. Editor mode: load an existing xml into groot:**
+**1. Editor mode: load an existing xml into Groot:**
 - you might get the error of custom nodes, then you need to register your nodes for Groot to  be able to visualize them:
 https://navigation.ros.org/tutorials/docs/using_groot.html#adding-a-custom-node
 - you also need to modify the xml for Groot:
