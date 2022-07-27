@@ -90,6 +90,9 @@ Start Gazebo:
 source /usr/share/gazebo/setup.sh
 ros2 launch gazebo_ros gazebo.launch.py
 ```
+
+> In case of gazebo errors run: `sudo killall -9 gazebo gzserver gzclient`. Then try to launch the Gazebo world again.
+
 If you don't have Gazebo installed, then please install it first.
 
 Open a second terminal:
